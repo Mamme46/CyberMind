@@ -8,6 +8,18 @@ const auth=require("../middleware/auth.middleware");
 
 const upload=require("../middleware/upload.middleware");
 
+router.get(
+    "/",
+    auth,
+    UploadController.getUploads
+);
+
+router.get(
+    "/:id",
+    auth,
+    UploadController.getUpload
+);
+
 router.post(
 
     "/",

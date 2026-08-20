@@ -1,44 +1,52 @@
-﻿const { pool } = require("../config/database");
+﻿const pool = require("../config/database").pool;
 
 class Alert {
 
-    static async create(alert) {
+    static async create(alert){
 
         const query = `
-            INSERT INTO alerts(
-                log_event_id,
-                title,
-                description,
-                severity,
-                status
-            )
 
-            VALUES($1,$2,$3,$4,$5)
+        INSERT INTO alerts(
 
-            RETURNING *;
+            upload_id,
+            title,
+            description,
+            severity,
+            source_ip,
+            username
+
+        )
+
+        VALUES($1,$2,$3,$4,$5,$6)
+
+        RETURNING *;
+
         `;
 
-        const values = [
+        const values=[
 
-            alert.log_event_id,
+            alert.uploadId,
             alert.title,
             alert.description,
             alert.severity,
-            alert.status
+            alert.sourceIp,
+            alert.username
 
         ];
 
-        const { rows } = await pool.query(query, values);
+        const {rows}=await pool.query(query,values);
 
         return rows[0];
 
     }
 
-    static async findAll() {
+    static async findAll(){
 
-        const { rows } = await pool.query(
+        const {rows}=await pool.query(
 
-            "SELECT * FROM alerts ORDER BY created_at DESC"
+            `SELECT *
+             FROM alerts
+             ORDER BY created_at DESC`
 
         );
 
@@ -46,25 +54,52 @@ class Alert {
 
     }
 
-    static async updateStatus(id, status) {
+    static async findById(id){
 
-        const { rows } = await pool.query(
+    const { rows } = await pool.query(
 
-            `
-                UPDATE alerts
-                SET status=$1
-                WHERE id=$2
-                RETURNING *
-            `,
+        `SELECT *
+         FROM alerts
+         WHERE id = $1`,
 
-            [status, id]
+        [id]
 
-        );
+    );
 
-        return rows[0];
-
-    }
+    return rows[0];
 
 }
 
-module.exports = Alert;
+static async updateStatus(id, status) {
+
+    const { rows } = await pool.query(
+
+        `
+
+        UPDATE alerts
+
+        SET status = $1
+
+        WHERE id = $2
+
+        RETURNING *;
+
+        `,
+
+        [
+
+            status,
+
+            id
+
+        ]
+
+    );
+
+    return rows[0];
+
+}
+
+}
+
+module.exports=Alert;

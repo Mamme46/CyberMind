@@ -34,6 +34,58 @@ class Upload {
 
     }
 
+    static async findAll() {
+
+    const { rows } = await pool.query(
+
+        `
+
+        SELECT
+
+            id,
+
+            original_name,
+
+            uploaded_at,
+
+            mime_type,
+
+            file_size
+
+        FROM uploads
+
+        ORDER BY uploaded_at DESC
+
+        `
+
+    );
+
+    return rows;
+
+}
+
+static async findById(id) {
+
+    const { rows } = await pool.query(
+
+        `
+
+        SELECT *
+
+        FROM uploads
+
+        WHERE id=$1
+
+        `,
+
+        [id]
+
+    );
+
+    return rows[0];
+
+}
+
 }
 
 module.exports = Upload;

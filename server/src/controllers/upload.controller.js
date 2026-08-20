@@ -38,6 +38,70 @@ class UploadController{
 
     }
 
+    static async getUploads(req, res) {
+
+    try {
+
+        const uploads = await UploadService.getUploads();
+
+        res.json({
+
+            success: true,
+
+            data: uploads
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
+
+}
+
+static async getUpload(req, res) {
+
+    try {
+
+        const upload = await UploadService.getUpload(
+
+            req.params.id
+
+        );
+
+        res.json({
+
+            success: true,
+
+            data: upload
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
+
+}
+
 }
 
 module.exports=UploadController;

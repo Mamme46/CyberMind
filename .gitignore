@@ -1,2 +1,21 @@
-.env
+# Dependencies
 node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build
+dist/
+build/
+
+# Uploaded log files
+server/src/uploads/*
+!server/src/uploads/.gitkeep
+
+# Logs
+*.log
+
+# Coverage
+coverage/
