@@ -1,0 +1,8 @@
+node_modules
+.git
+.gitignore
+.env
+.env.docker
+.env.*
+server/src/uploads/*
+npm-debug.log
