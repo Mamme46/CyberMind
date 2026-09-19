@@ -29,11 +29,17 @@ import {
 
     Chip,
 
-    Button
+    Button,
+
+    Box
 
 } from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
+import EmptyState from "../components/common/EmptyState";
+
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { getAlerts } from "../api/alerts.api";
 
@@ -42,6 +48,10 @@ function Alerts() {
     const [alerts, setAlerts] = useState([]);
 
     const navigate = useNavigate();
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const uploadId = searchParams.get("uploadId");
 
     useEffect(() => {
 
@@ -56,6 +66,18 @@ function Alerts() {
         loadAlerts();
 
     }, []);
+
+    const visibleAlerts = uploadId
+
+        ? alerts.filter(alert => String(alert.upload_id) === String(uploadId))
+
+        : alerts;
+
+    function clearFilter() {
+
+        setSearchParams({});
+
+    }
 
     function severityColor(severity) {
 
@@ -113,14 +135,97 @@ function Alerts() {
 
         <Layout>
 
+            <Box
+
+                sx={{
+
+                    display: "flex",
+
+                    alignItems: "center",
+
+                    gap: 1.5,
+
+                    mb: 3,
+
+                    flexWrap: "wrap"
+
+                }}
+
+            >
+
+                <Typography variant="h5">
+
+                    Alerts
+
+                </Typography>
+
+                {
+
+                    uploadId && (
+
+                        <Chip
+
+                            size="small"
+
+                            variant="outlined"
+
+                            label={`Upload #${uploadId}`}
+
+                            onDelete={clearFilter}
+
+                        />
+
+                    )
+
+                }
+
+            </Box>
+
             <TableContainer
                 component={Paper}
+                variant="outlined"
                 sx={{
                     width: "100%",
-                    borderRadius: 4,
+                    borderRadius: 3,
                     overflowX: "auto"
                 }}
             >
+
+                {
+
+                    visibleAlerts.length === 0
+
+                        ? (
+
+                            <EmptyState
+
+                                icon={<WarningAmberIcon />}
+
+                                title={
+
+                                    uploadId
+
+                                        ? "No alerts for this upload"
+
+                                        : "No alerts to review"
+
+                                }
+
+                                description={
+
+                                    uploadId
+
+                                        ? "This upload has not triggered any alert so far."
+
+                                        : "Alerts generated from analyzed log uploads will appear here."
+
+                                }
+
+                            />
+
+                        )
+
+                        : (
 
                 <Table sx={{ width: "100%", tableLayout: "auto" }}>
 
@@ -152,9 +257,9 @@ function Alerts() {
 
                         {
 
-                            alerts.map((alert) => (
+                            visibleAlerts.map((alert) => (
 
-                                <TableRow key={alert.id}>
+                                <TableRow key={alert.id} hover>
 
                                     <TableCell>
 
@@ -165,6 +270,8 @@ function Alerts() {
                                     <TableCell>
 
                                         <Chip
+
+                                            size="small"
 
                                             label={alert.severity}
 
@@ -272,7 +379,9 @@ function Alerts() {
 
                                         <Button
 
-                                            variant="contained"
+                                            variant="outlined"
+
+                                            size="small"
 
                                             onClick={() =>
 
@@ -286,7 +395,7 @@ function Alerts() {
 
                                         >
 
-                                            Open
+                                            Investigate
 
                                         </Button>
 
@@ -301,6 +410,10 @@ function Alerts() {
                     </TableBody>
 
                 </Table>
+
+                        )
+
+                }
 
             </TableContainer>
 

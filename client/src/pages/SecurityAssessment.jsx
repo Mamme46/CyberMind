@@ -21,6 +21,22 @@ import { runSecurityScan }
 import Layout
     from "../components/layout/Layout";
 
+import EmptyState
+    from "../components/common/EmptyState";
+
+function findingSeverityColor(severity) {
+
+    const value = String(severity || "").toLowerCase();
+
+    if (value === "critical") return "error";
+    if (value === "high") return "warning";
+    if (value === "medium") return "info";
+    if (value === "low") return "success";
+
+    return "default";
+
+}
+
 
 function SecurityAssessment() {
 
@@ -250,9 +266,11 @@ const findings = getFindings();
 
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    mb: 3
+                    mb: 3,
+                    borderRadius: 3
                 }}
             >
 
@@ -265,9 +283,35 @@ const findings = getFindings();
                     }}
                 >
 
-                    <SecurityIcon
-                        fontSize="large"
-                    />
+                    <Box
+
+                        sx={{
+
+                            display: "flex",
+
+                            alignItems: "center",
+
+                            justifyContent: "center",
+
+                            width: 42,
+
+                            height: 42,
+
+                            borderRadius: "50%",
+
+                            bgcolor: "#e9f0f6",
+
+                            color: "#3a6fa0",
+
+                            flexShrink: 0
+
+                        }}
+
+                    >
+
+                        <SecurityIcon fontSize="small" />
+
+                    </Box>
 
                     <Typography
                         variant="h5"
@@ -353,143 +397,55 @@ const findings = getFindings();
                         sx={{
                             display: "grid",
                             gridTemplateColumns: {
-                                xs: "1fr",
-                                sm: "repeat(3, 1fr)"
+                                xs: "repeat(2, 1fr)",
+                                sm: "repeat(3, 1fr)",
+                                md: "repeat(6, 1fr)"
                             },
                             gap: 2,
                             mb: 3
                         }}
                     >
 
-                        <Paper sx={{ p: 3 }}>
+                        <ScanTile
+                            label="Critical"
+                            value={summary.critical}
+                            tone={summary.critical > 0 ? "critical" : "neutral"}
+                        />
 
-                            <Typography
-                                color="text.secondary"
-                            >
+                        <ScanTile
+                            label="High"
+                            value={summary.high}
+                            tone={summary.high > 0 ? "warning" : "neutral"}
+                        />
 
-                                Critical
+                        <ScanTile
+                            label="Medium"
+                            value={summary.medium}
+                            tone="neutral"
+                        />
 
-                            </Typography>
+                        <ScanTile
+                            label="Low"
+                            value={summary.low}
+                            tone="neutral"
+                        />
 
-                            <Typography
-                                variant="h3"
-                            >
+                        <ScanTile
+                            label="Secrets"
+                            value={summary.secrets}
+                            tone={summary.secrets > 0 ? "warning" : "neutral"}
+                        />
 
-                                {summary.critical}
-
-                            </Typography>
-
-                        </Paper>
-
-
-                        <Paper sx={{ p: 3 }}>
-
-                            <Typography
-                                color="text.secondary"
-                            >
-
-                                High
-
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                            >
-
-                                {summary.high}
-
-                            </Typography>
-
-                        </Paper>
-
-
-                        <Paper sx={{ p: 3 }}>
-
-                            <Typography
-                                color="text.secondary"
-                            >
-
-                                Medium
-
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                            >
-
-                                {summary.medium}
-
-                            </Typography>
-
-                        </Paper>
-
-
-                        <Paper sx={{ p: 3 }}>
-
-                            <Typography
-                                color="text.secondary"
-                            >
-
-                                Low
-
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                            >
-
-                                {summary.low}
-
-                            </Typography>
-
-                        </Paper>
-
-
-                        <Paper sx={{ p: 3 }}>
-
-                            <Typography
-                                color="text.secondary"
-                            >
-
-                                Secrets
-
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                            >
-
-                                {summary.secrets}
-
-                            </Typography>
-
-                        </Paper>
-
-
-                        <Paper sx={{ p: 3 }}>
-
-                            <Typography
-                                color="text.secondary"
-                            >
-
-                                Misconfigurations
-
-                            </Typography>
-
-                            <Typography
-                                variant="h3"
-                            >
-
-                                {summary.misconfigurations}
-
-                            </Typography>
-
-                        </Paper>
+                        <ScanTile
+                            label="Misconfigurations"
+                            value={summary.misconfigurations}
+                            tone="neutral"
+                        />
 
                     </Box>
 
 
-                    <Paper sx={{ p: 3 }}>
+                    <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
 
                         <Typography
                             variant="h6"
@@ -510,7 +466,7 @@ const findings = getFindings();
                                 >
 
                                     <Typography
-                                        fontWeight="bold"
+                                        variant="subtitle2"
                                     >
 
                                         {target.Target}
@@ -523,6 +479,8 @@ const findings = getFindings();
                                     >
 
                                         <Chip
+                                            size="small"
+                                            variant="outlined"
                                             label={`Vulnerabilities: ${
                                                 target.Vulnerabilities?.length || 0
                                             }`}
@@ -534,6 +492,8 @@ const findings = getFindings();
 
 
                                         <Chip
+                                            size="small"
+                                            variant="outlined"
                                             label={`Secrets: ${
                                                 target.Secrets?.length || 0
                                             }`}
@@ -545,6 +505,8 @@ const findings = getFindings();
 
 
                                         <Chip
+                                            size="small"
+                                            variant="outlined"
                                             label={`Misconfigurations: ${
                                                 target.Misconfigurations?.length || 0
                                             }`}
@@ -568,7 +530,7 @@ const findings = getFindings();
 
                     </Paper>
 
-                    <Paper sx={{ p: 3, mt: 3 }}>
+                    <Paper variant="outlined" sx={{ p: 3, mt: 3, borderRadius: 3 }}>
 
     <Typography
         variant="h6"
@@ -579,9 +541,15 @@ const findings = getFindings();
 
     {findings.length === 0 ? (
 
-        <Typography color="text.secondary">
-            No security findings detected.
-        </Typography>
+        <EmptyState
+
+            icon={<SecurityIcon />}
+
+            title="No security findings detected"
+
+            description="The last scan did not surface any vulnerability, secret or misconfiguration."
+
+        />
 
     ) : (
 
@@ -592,7 +560,8 @@ const findings = getFindings();
                 variant="outlined"
                 sx={{
                     p: 3,
-                    mb: 2
+                    mb: 2,
+                    borderRadius: 2
                 }}
             >
 
@@ -601,14 +570,16 @@ const findings = getFindings();
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        mb: 2
+                        mb: 2,
+                        gap: 2,
+                        flexWrap: "wrap"
                     }}
                 >
 
                     <Box>
 
                         <Typography
-                            variant="h6"
+                            variant="subtitle1"
                         >
                             {finding.title}
                         </Typography>
@@ -625,12 +596,16 @@ const findings = getFindings();
                     <Box>
 
                         <Chip
+                            size="small"
+                            variant="outlined"
                             label={finding.type}
                             sx={{ mr: 1 }}
                         />
 
                         <Chip
+                            size="small"
                             label={finding.severity}
+                            color={findingSeverityColor(finding.severity)}
                         />
 
                     </Box>
@@ -639,6 +614,7 @@ const findings = getFindings();
 
                 <Typography
                     variant="body2"
+                    color="text.secondary"
                     sx={{ mb: 2 }}
                 >
                     {finding.description}
@@ -647,14 +623,14 @@ const findings = getFindings();
                 <Divider sx={{ mb: 2 }} />
 
                 <Typography variant="body2">
-                    <strong>Target:</strong>{" "}
+                    <Typography component="span" variant="body2" color="text.secondary">Target: </Typography>
                     {finding.target}
                 </Typography>
 
                 {finding.package && (
 
                     <Typography variant="body2">
-                        <strong>Package:</strong>{" "}
+                        <Typography component="span" variant="body2" color="text.secondary">Package: </Typography>
                         {finding.package}
                     </Typography>
 
@@ -663,7 +639,7 @@ const findings = getFindings();
                 {finding.installedVersion && (
 
                     <Typography variant="body2">
-                        <strong>Installed version:</strong>{" "}
+                        <Typography component="span" variant="body2" color="text.secondary">Installed version: </Typography>
                         {finding.installedVersion}
                     </Typography>
 
@@ -672,7 +648,7 @@ const findings = getFindings();
                 {finding.fixedVersion && (
 
                     <Typography variant="body2">
-                        <strong>Fixed version:</strong>{" "}
+                        <Typography component="span" variant="body2" color="text.secondary">Fixed version: </Typography>
                         {finding.fixedVersion}
                     </Typography>
 
@@ -696,5 +672,54 @@ const findings = getFindings();
 
 }
 
+
+const SCAN_TILE_TONES = {
+
+    neutral: { accent: "#5b6472", tint: "#f2f3f5" },
+    warning: { accent: "#a9691f", tint: "#f6efe3" },
+    critical: { accent: "#b3413a", tint: "#f7e9e8" }
+
+};
+
+function ScanTile({ label, value, tone = "neutral" }) {
+
+    const palette = SCAN_TILE_TONES[tone] || SCAN_TILE_TONES.neutral;
+
+    return (
+
+        <Paper
+            variant="outlined"
+            sx={{
+                p: 2.5,
+                borderRadius: 3,
+                borderLeft: "3px solid",
+                borderLeftColor: palette.accent,
+                bgcolor: value > 0 ? palette.tint : "background.paper"
+            }}
+        >
+
+            <Typography
+                variant="body2"
+                color="text.secondary"
+            >
+
+                {label}
+
+            </Typography>
+
+            <Typography
+                variant="h4"
+                sx={{ color: value > 0 ? palette.accent : "text.primary" }}
+            >
+
+                {value}
+
+            </Typography>
+
+        </Paper>
+
+    );
+
+}
 
 export default SecurityAssessment;

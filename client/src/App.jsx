@@ -8,11 +8,11 @@ import {
 
 } from "react-router-dom";
 
-import CssBaseline from "@mui/material/CssBaseline";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Uploads from "./pages/Uploads";
 import UploadDetails from "./pages/UploadDetails";
+import UploadLogs from "./pages/UploadLogs";
 import Alerts from "./pages/Alerts";
 import AlertDetails from "./pages/AlertDetails";
 import AIAssistant from "./pages/AIAssistant";
@@ -25,7 +25,6 @@ function App(){
 
     return(
       <>
-        <CssBaseline />
         <BrowserRouter>
 
             <Routes>
@@ -58,6 +57,14 @@ function App(){
                     path="/uploads/:id"
 
                     element={<UploadDetails/>}
+
+                />
+
+                <Route
+
+                    path="/uploads/:id/logs"
+
+                    element={<UploadLogs/>}
 
                 />
 

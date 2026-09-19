@@ -19,8 +19,12 @@ import {
 
 import DescriptionIcon from "@mui/icons-material/Description";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 
 import { useNavigate } from "react-router-dom";
+
+import Layout from "../components/layout/Layout";
+import EmptyState from "../components/common/EmptyState";
 
 import {
     getUploads,
@@ -160,14 +164,14 @@ function Uploads() {
 
     return (
 
-        <Paper sx={{ p: 4 }}>
+        <Layout>
 
             {/* --------------------------- */}
             {/* Upload                     */}
             {/* --------------------------- */}
 
             <Typography
-                variant="h4"
+                variant="h5"
                 mb={3}
             >
                 Uploaded Files
@@ -179,7 +183,8 @@ function Uploads() {
                 sx={{
                     p: 3,
                     mb: 4,
-                    bgcolor: "#f9fafb"
+                    borderRadius: 3,
+                    bgcolor: "background.paper"
                 }}
             >
 
@@ -311,13 +316,37 @@ function Uploads() {
             {/* Liste des fichiers          */}
             {/* --------------------------- */}
 
-            <List>
+            <Paper variant="outlined" sx={{ borderRadius: 3 }}>
 
                 {
 
-                    uploads.map(upload => (
+                    uploads.length === 0
+
+                        ? (
+
+                            <EmptyState
+
+                                icon={<InsertDriveFileOutlinedIcon />}
+
+                                title="No files uploaded yet"
+
+                                description="Upload a log file above to start analyzing it with CyberMind."
+
+                            />
+
+                        )
+
+                        : (
+
+                <List sx={{ py: 0 }}>
+
+                {
+
+                    uploads.map((upload, index) => (
 
                         <div key={upload.id}>
+
+                            {index > 0 && <Divider />}
 
                             <ListItemButton
 
@@ -330,6 +359,8 @@ function Uploads() {
                                     )
 
                                 }
+
+                                sx={{ py: 1.5, px: 3 }}
 
                             >
 
@@ -348,6 +379,12 @@ function Uploads() {
                                         upload.original_name
                                     }
 
+                                    primaryTypographyProps={{
+
+                                        fontWeight: 600
+
+                                    }}
+
                                     secondary={
 
                                         new Date(
@@ -363,6 +400,10 @@ function Uploads() {
 
                                 <Chip
 
+                                    size="small"
+
+                                    variant="outlined"
+
                                     label="Open"
 
                                     color="success"
@@ -371,18 +412,21 @@ function Uploads() {
 
                             </ListItemButton>
 
-
-                            <Divider />
-
                         </div>
 
                     ))
 
                 }
 
-            </List>
+                </List>
 
-        </Paper>
+                        )
+
+                }
+
+            </Paper>
+
+        </Layout>
 
     );
 

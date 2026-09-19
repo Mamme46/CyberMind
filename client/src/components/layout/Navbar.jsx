@@ -8,39 +8,28 @@ import {
     Tooltip
 } from "@mui/material";
 
-import SmartToyIcon from "@mui/icons-material/SmartToy";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useLocation } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ sidebarOpen = true, onToggleSidebar }) {
 
     const location = useLocation();
     const isAI = location.pathname.startsWith("/ai");
-    const drawerWidth = isAI ? 0 : 260;
+    const drawerWidth = (isAI || !sidebarOpen) ? 0 : 260;
 
     function getTitle() {
 
-        switch (location.pathname) {
+        const path = location.pathname;
 
-            case "/dashboard":
-                return "Dashboard";
+        if (path.startsWith("/uploads")) return "Uploads";
+        if (path.startsWith("/alerts")) return "Alerts";
+        if (path.startsWith("/ai")) return "AI Assistant";
+        if (path.startsWith("/reports")) return "Reports";
+        if (path.startsWith("/security")) return "Security Assessment";
+        if (path.startsWith("/dashboard")) return "Dashboard";
 
-            case "/uploads":
-                return "Uploads";
-
-            case "/alerts":
-                return "Alerts";
-
-            case "/ai":
-                return "AI Assistant";
-
-            case "/reports":
-                return "Reports";
-
-            default:
-                return "CyberMind";
-
-        }
+        return "CyberMind";
 
     }
 
@@ -50,7 +39,7 @@ function Navbar() {
 
             position="fixed"
 
-            elevation={2}
+            elevation={0}
 
             sx={{
 
@@ -58,9 +47,11 @@ function Navbar() {
 
                 width: `calc(100% - ${drawerWidth}px)`,
 
-                bgcolor: "#1e3a8a",
+                bgcolor: "#1a1d24",
 
-                height: 70,
+                borderBottom: "1px solid #2a2d35",
+
+                height: 64,
 
                 justifyContent: "center"
 
@@ -72,7 +63,7 @@ function Navbar() {
 
                 sx={{
 
-                    minHeight: 70,
+                    minHeight: 64,
 
                     px: 4,
 
@@ -92,51 +83,55 @@ function Navbar() {
 
                         alignItems: "center",
 
-                        gap: 2
+                        gap: 1.5
 
                     }}
 
                 >
 
-                    <SmartToyIcon
+                    <Tooltip title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}>
 
-                        sx={{
+                        <IconButton
 
-                            fontSize: 34,
+                            size="small"
 
-                            color: "#60a5fa"
+                            onClick={onToggleSidebar}
 
-                        }}
+                            sx={{ color: "#d7d9de" }}
 
-                    />
+                        >
+
+                            <MenuIcon fontSize="small" />
+
+                        </IconButton>
+
+                    </Tooltip>
 
                     <Box>
 
                         <Typography
 
-                            variant="h5"
-
-                            fontWeight="bold"
+                            variant="h6"
 
                         >
 
-                            CyberMind
+                            {getTitle()}
 
                         </Typography>
 
                         <Typography
 
-                            variant="body2"
+                            variant="caption"
 
                             sx={{
 
-                                opacity: .8
+                                color: "#9199a6"
 
                             }}
 
                         >
 
-                            {getTitle()}
+                            CyberMind Security Platform
 
                         </Typography>
 
@@ -152,7 +147,7 @@ function Navbar() {
 
                         alignItems: "center",
 
-                        gap: 2
+                        gap: 1.5
 
                     }}
 
@@ -160,7 +155,7 @@ function Navbar() {
 
                     <Typography
 
-                        fontWeight="bold"
+                        sx={{ fontSize: 14 }}
 
                     >
 
@@ -170,19 +165,23 @@ function Navbar() {
 
                     <Tooltip title="Profile">
 
-                        <IconButton>
+                        <IconButton size="small">
 
                             <Avatar
 
                                 sx={{
 
-                                    bgcolor:"#2563eb"
+                                    bgcolor:"#3a5da8",
+
+                                    width: 32,
+
+                                    height: 32
 
                                 }}
 
                             >
 
-                                <AccountCircleIcon/>
+                                <AccountCircleIcon fontSize="small"/>
 
                             </Avatar>
 

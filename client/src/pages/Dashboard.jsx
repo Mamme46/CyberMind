@@ -25,6 +25,7 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import DangerousIcon from "@mui/icons-material/Dangerous";
+import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 
@@ -80,7 +81,7 @@ async function loadDashboard() {
 
 }
 
-    const cards = [
+    const secondaryCards = [
 
     {
 
@@ -88,45 +89,33 @@ async function loadDashboard() {
 
         value: stats.uploads,
 
-        color: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+        tone: "neutral",
 
-        icon: <UploadFileIcon sx={{ fontSize: 70 }}/>
+        icon: <UploadFileIcon/>
 
     },
 
     {
 
-        title: "Alerts",
+        title: "Open Alerts",
 
         value: stats.alerts,
 
-        color: "linear-gradient(135deg,#f59e0b,#d97706)",
+        tone: "warning",
 
-        icon: <WarningAmberIcon sx={{ fontSize: 70 }}/>
-
-    },
-
-    {
-
-        title: "Critical",
-
-        value: stats.criticalAlerts,
-
-        color: "linear-gradient(135deg,#ef4444,#b91c1c)",
-
-        icon: <DangerousIcon sx={{ fontSize: 70 }}/>
+        icon: <WarningAmberIcon/>
 
     },
 
     {
 
-        title: "Events",
+        title: "Events Analyzed",
 
         value: stats.events,
 
-        color: "linear-gradient(135deg,#7c3aed,#5b21b6)",
+        tone: "info",
 
-        icon: <DescriptionIcon sx={{ fontSize: 70 }}/>
+        icon: <DescriptionIcon/>
 
     }
 
@@ -154,19 +143,48 @@ async function loadDashboard() {
 
                 gridTemplateColumns: {
                     xs: "1fr",
-                    md: "repeat(2, 280px)",
-                    xl: "repeat(4, 260px)"
+                    md: "minmax(280px, 1.3fr) repeat(3, 1fr)"
                 },
-
-                justifyContent: "start",
 
                 gap: 3
             }}
         >
 
+                <StatCard
+
+                    title="Critical Alerts"
+
+                    value={stats.criticalAlerts}
+
+                    description={
+
+                        stats.criticalAlerts > 0
+
+                            ? "Require immediate investigation"
+
+                            : "No critical activity detected"
+
+                    }
+
+                    tone={stats.criticalAlerts > 0 ? "critical" : "neutral"}
+
+                    icon={
+
+                        stats.criticalAlerts > 0
+
+                            ? <DangerousIcon/>
+
+                            : <GppGoodOutlinedIcon/>
+
+                    }
+
+                    featured
+
+                />
+
                 {
 
-                    cards.map(card => (
+                    secondaryCards.map(card => (
 
                         <StatCard
 
@@ -176,7 +194,7 @@ async function loadDashboard() {
 
                             value={card.value}
 
-                            color={card.color}
+                            tone={card.tone}
 
                             icon={card.icon}
 
@@ -213,9 +231,10 @@ async function loadDashboard() {
                 >
 
                     <Paper
+                        variant="outlined"
                         sx={{
                             p: 3,
-                            borderRadius: 4,
+                            borderRadius: 3,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "space-between",
@@ -224,20 +243,53 @@ async function loadDashboard() {
                         }}
                     >
 
-                        <Box>
-                            <Typography variant="h6" fontWeight="bold">
-                                AI Assistant
-                            </Typography>
-                            <Typography sx={{ mt: 1 }} color="text.secondary">
-                                Need help investigating an alert?
-                            </Typography>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+
+                            <Box
+
+                                sx={{
+
+                                    display: "flex",
+
+                                    alignItems: "center",
+
+                                    justifyContent: "center",
+
+                                    width: 42,
+
+                                    height: 42,
+
+                                    borderRadius: "50%",
+
+                                    bgcolor: "#e9f0f6",
+
+                                    color: "#3a6fa0",
+
+                                    flexShrink: 0
+
+                                }}
+
+                            >
+
+                                <SmartToyIcon fontSize="small" />
+
+                            </Box>
+
+                            <Box>
+                                <Typography variant="subtitle1">
+                                    AI Assistant
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Need help investigating an alert?
+                                </Typography>
+                            </Box>
+
                         </Box>
 
 
                         <Button
                             variant="contained"
                             startIcon={<SmartToyIcon />}
-                            sx={{ borderRadius: 2, px: 4, py: 1.5 }}
                             onClick={() => navigate("/ai")}
                         >
                             Open AI Assistant

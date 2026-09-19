@@ -1,27 +1,52 @@
+import { useState } from "react";
 import { Box, Toolbar } from "@mui/material";
-import { useLocation } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
 function Layout({ children }) {
 
-    const location = useLocation();
-    const drawerWidth =260;
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+
+        const stored = localStorage.getItem("sidebarOpen");
+
+        return stored === null ? true : stored === "true";
+
+    });
+
+    function toggleSidebar() {
+
+        setSidebarOpen(previous => {
+
+            const next = !previous;
+
+            localStorage.setItem("sidebarOpen", String(next));
+
+            return next;
+
+        });
+
+    }
 
     return (
 
         <Box
             sx={{
                 display: "flex",
-                bgcolor: "#f1f5f9",
+                bgcolor: "background.default",
                 minHeight: "100vh"
             }}
         >
 
-            <Navbar />
+            <Navbar
 
-            <Sidebar />
+                sidebarOpen={sidebarOpen}
+
+                onToggleSidebar={toggleSidebar}
+
+            />
+
+            <Sidebar open={sidebarOpen} />
 
             <Box
                 component="main"
@@ -29,11 +54,11 @@ function Layout({ children }) {
 
                     flexGrow: 1,
 
-                    minWidth: 0, 
+                    minWidth: 0,
 
                     minHeight: "100vh",
 
-                    bgcolor: "#f1f5f9"
+                    bgcolor: "background.default"
 
                 }}
             >

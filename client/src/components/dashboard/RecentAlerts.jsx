@@ -9,24 +9,48 @@ import {
     Chip
 } from "@mui/material";
 
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
+import EmptyState from "../common/EmptyState";
+
 function RecentAlerts({ alerts }) {
 
     return (
 
         <Paper
+            variant="outlined"
             sx={{
-                borderRadius: 4,
+                borderRadius: 3,
                 p: 3
             }}
         >
 
             <Typography
-                variant="h5"
-                fontWeight="bold"
-                mb={3}
+                variant="subtitle1"
+                mb={2}
             >
                 Recent Alerts
             </Typography>
+
+            {
+
+                alerts.length === 0
+
+                    ? (
+
+                        <EmptyState
+
+                            icon={<WarningAmberIcon />}
+
+                            title="No alerts yet"
+
+                            description="Uploaded logs will surface security alerts here as they are detected."
+
+                        />
+
+                    )
+
+                    : (
 
             <Table>
 
@@ -34,15 +58,15 @@ function RecentAlerts({ alerts }) {
 
                     <TableRow>
 
-                        <TableCell><b>Severity</b></TableCell>
+                        <TableCell>Severity</TableCell>
 
-                        <TableCell><b>Title</b></TableCell>
+                        <TableCell>Title</TableCell>
 
-                        <TableCell><b>Source IP</b></TableCell>
+                        <TableCell>Source IP</TableCell>
 
-                        <TableCell><b>User</b></TableCell>
+                        <TableCell>User</TableCell>
 
-                        <TableCell><b>Status</b></TableCell>
+                        <TableCell>Status</TableCell>
 
                     </TableRow>
 
@@ -62,6 +86,7 @@ function RecentAlerts({ alerts }) {
                                 <TableCell>
 
                                     <Chip
+                                        size="small"
                                         label={alert.severity}
                                         color={
                                             alert.severity === "critical"
@@ -95,6 +120,7 @@ function RecentAlerts({ alerts }) {
                                 <TableCell>
 
                                     <Chip
+                                        size="small"
                                         label={alert.status}
                                         variant="outlined"
                                     />
@@ -110,6 +136,10 @@ function RecentAlerts({ alerts }) {
                 </TableBody>
 
             </Table>
+
+                    )
+
+            }
 
         </Paper>
 

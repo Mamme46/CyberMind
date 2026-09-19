@@ -1,12 +1,32 @@
-import {
+import { Card, Box, Typography } from "@mui/material";
 
-    Card,
+const TONES = {
 
-    Box,
+    neutral: {
+        accent: "#5b6472",
+        tint: "#f2f3f5",
+        icon: "#5b6472"
+    },
 
-    Typography
+    critical: {
+        accent: "#b3413a",
+        tint: "#f7e9e8",
+        icon: "#b3413a"
+    },
 
-} from "@mui/material";
+    warning: {
+        accent: "#a9691f",
+        tint: "#f6efe3",
+        icon: "#a9691f"
+    },
+
+    info: {
+        accent: "#3a6fa0",
+        tint: "#e9f0f6",
+        icon: "#3a6fa0"
+    }
+
+};
 
 function StatCard({
 
@@ -14,47 +34,55 @@ function StatCard({
 
     value,
 
-    color,
+    description,
 
-    icon
+    tone = "neutral",
+
+    icon,
+
+    featured = false
 
 }) {
+
+    const palette = TONES[tone] || TONES.neutral;
 
     return (
 
         <Card
 
-            elevation={4}
+            variant="outlined"
 
             sx={{
 
-                background: color,
+                borderRadius: 3,
 
-                color: "white",
+                borderColor: featured ? palette.accent : "divider",
 
-                borderRadius: 4,
+                borderLeftWidth: 4,
 
-                height: 95,
+                borderLeftColor: palette.accent,
 
-                px: 2,
+                px: featured ? 3.5 : 2.5,
 
-                py: 1.5,
+                py: featured ? 3 : 2,
 
                 display: "flex",
 
-                justifyContent: "space-between",
-
                 alignItems: "center",
 
-                transition: ".25s",
+                justifyContent: "space-between",
 
-                cursor: "pointer",
+                gap: 2,
 
-                "&:hover":{
+                height: "100%",
 
-                    transform:"translateY(-5px)",
+                transition: "box-shadow .2s, transform .2s",
 
-                    boxShadow:8
+                "&:hover": {
+
+                    boxShadow: "0 4px 14px rgba(20,22,30,0.08)",
+
+                    transform: "translateY(-2px)"
 
                 }
 
@@ -62,17 +90,13 @@ function StatCard({
 
         >
 
-            <Box>
+            <Box sx={{ minWidth: 0 }}>
 
                 <Typography
 
-                    sx={{
+                    variant="body2"
 
-                        fontSize:16,
-
-                        opacity:.85
-
-                    }}
+                    sx={{ color: "text.secondary", mb: 0.5 }}
 
                 >
 
@@ -84,11 +108,13 @@ function StatCard({
 
                     sx={{
 
-                        fontSize:30,
+                        fontSize: featured ? 40 : 26,
 
-                        fontWeight:"bold",
+                        fontWeight: 600,
 
-                        mt:.5
+                        color: "text.primary",
+
+                        lineHeight: 1.1
 
                     }}
 
@@ -98,21 +124,25 @@ function StatCard({
 
                 </Typography>
 
-                <Typography
+                {
 
-                    sx={{
+                    description && (
 
-                        opacity:.75,
+                        <Typography
 
-                        mt:.5,
+                            variant="caption"
 
-                        fontSize:11
+                            sx={{ color: "text.secondary", mt: 0.5, display: "block" }}
 
-                    }}
+                        >
 
-                >
+                            {description}
 
-                </Typography>
+                        </Typography>
+
+                    )
+
+                }
 
             </Box>
 
@@ -120,7 +150,29 @@ function StatCard({
 
                 sx={{
 
-                    opacity:.20
+                    display: "flex",
+
+                    alignItems: "center",
+
+                    justifyContent: "center",
+
+                    width: featured ? 56 : 42,
+
+                    height: featured ? 56 : 42,
+
+                    borderRadius: "50%",
+
+                    bgcolor: palette.tint,
+
+                    color: palette.icon,
+
+                    flexShrink: 0,
+
+                    "& svg": {
+
+                        fontSize: featured ? 28 : 20
+
+                    }
 
                 }}
 

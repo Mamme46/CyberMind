@@ -282,6 +282,7 @@ function AIAssistant() {
         <Layout>
 
             <Paper
+                variant="outlined"
                 sx={{
 
                     width: "100%",
@@ -292,7 +293,7 @@ function AIAssistant() {
 
                     display: "flex",
 
-                    borderRadius: 4,
+                    borderRadius: 3,
 
                     overflow: "hidden"
 

@@ -20,6 +20,12 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import AddIcon from "@mui/icons-material/Add";
+
+import EmptyState from "../common/EmptyState";
+
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+
 function ConversationSidebar({
 
     conversations,
@@ -40,11 +46,13 @@ function ConversationSidebar({
 
             sx={{
 
-                width: 300,
+                width: 280,
 
                 height: "100%",
 
-                borderRight: "1px solid #ddd",
+                borderRight: "1px solid",
+
+                borderColor: "divider",
 
                 display: "flex",
 
@@ -64,11 +72,13 @@ function ConversationSidebar({
 
                     variant="contained"
 
+                    startIcon={<AddIcon />}
+
                     onClick={onNewConversation}
 
                 >
 
-                    + New Chat
+                    New Chat
 
                 </Button>
 
@@ -78,11 +88,17 @@ function ConversationSidebar({
 
             <Typography
 
+                variant="overline"
+
                 sx={{
 
-                    p: 2,
+                    px: 2,
 
-                    fontWeight: "bold"
+                    pt: 2,
+
+                    pb: 1,
+
+                    color: "text.secondary"
 
                 }}
 
@@ -98,11 +114,31 @@ function ConversationSidebar({
 
                     flex: 1,
 
-                    overflowY: "auto"
+                    overflowY: "auto",
+
+                    px: 1
 
                 }}
 
             >
+
+                {
+
+                    conversations.length === 0 && (
+
+                        <EmptyState
+
+                            icon={<ChatBubbleOutlineIcon />}
+
+                            title="No conversations yet"
+
+                            description="Start a new chat to talk with the CyberMind AI assistant."
+
+                        />
+
+                    )
+
+                }
 
                 {
 
@@ -126,11 +162,27 @@ function ConversationSidebar({
 
                             }
 
+                            sx={{
+
+                                borderRadius: 2,
+
+                                mb: 0.5
+
+                            }}
+
                         >
 
                             <ListItemText
 
                                 primary={conversation.title}
+
+                                primaryTypographyProps={{
+
+                                    noWrap: true,
+
+                                    fontSize: 14
+
+                                }}
 
                                 secondary={
 
@@ -141,6 +193,12 @@ function ConversationSidebar({
                                     ).toLocaleString()
 
                                 }
+
+                                secondaryTypographyProps={{
+
+                                    fontSize: 12
+
+                                }}
 
                             />
 

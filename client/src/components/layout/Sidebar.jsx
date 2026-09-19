@@ -8,8 +8,6 @@ import {
 
     ListItemButton,
 
-    ListItemIcon,
-
     ListItemText,
 
     Typography,
@@ -21,20 +19,6 @@ import {
     Avatar
 
 } from "@mui/material";
-
-import DashboardIcon from "@mui/icons-material/Dashboard";
-
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-
-import SearchIcon from "@mui/icons-material/Search";
-
-import SmartToyIcon from "@mui/icons-material/SmartToy";
-
-import DescriptionIcon from "@mui/icons-material/Description";
-
-import LogoutIcon from "@mui/icons-material/Logout";
 
 import SecurityIcon from "@mui/icons-material/Security";
 
@@ -48,8 +32,6 @@ const menuItems = [
 
         text: "Dashboard",
 
-        icon: <DashboardIcon />,
-
         path: "/dashboard"
 
     },
@@ -58,8 +40,6 @@ const menuItems = [
 
         text: "Uploads",
 
-        icon: <UploadFileIcon />,
-
         path: "/uploads"
 
     },
@@ -67,8 +47,6 @@ const menuItems = [
     {
 
         text: "Alerts",
-
-        icon: <WarningAmberIcon />,
 
         path: "/alerts"
 
@@ -79,8 +57,6 @@ const menuItems = [
 
         text: "AI Assistant",
 
-        icon: <SmartToyIcon />,
-
         path: "/ai"
 
     },
@@ -89,21 +65,18 @@ const menuItems = [
 
         text: "Reports",
 
-        icon: <DescriptionIcon />,
-
         path: "/reports"
 
     },
 
     {
         text: "Security Assessment",
-        icon: <SecurityIcon />,
         path: "/security"
     }
 
 ];
 
-function Sidebar() {
+function Sidebar({ open = true }) {
 
     const navigate = useNavigate();
 
@@ -113,7 +86,13 @@ function Sidebar() {
 
         localStorage.removeItem("token");
 
-        navigate("/login");
+        navigate("/");
+
+    }
+
+    if (!open) {
+
+        return null;
 
     }
 
@@ -133,9 +112,9 @@ function Sidebar() {
 
                     width: drawerWidth,
 
-                    bgcolor: "#111827",
+                    bgcolor: "#1a1d24",
 
-                    color: "white",
+                    color: "#d7d9de",
 
                     borderRight: "none",
 
@@ -169,9 +148,9 @@ function Sidebar() {
 
                         sx={{
 
-                            color: "#3b82f6",
+                            color: "#7c93c9",
 
-                            fontSize: 34
+                            fontSize: 30
 
                         }}
 
@@ -201,7 +180,7 @@ function Sidebar() {
 
                             sx={{
 
-                                color: "#9ca3af"
+                                color: "#9199a6"
 
                             }}
 
@@ -221,7 +200,7 @@ function Sidebar() {
 
                 sx={{
 
-                    borderColor: "#1f2937"
+                    borderColor: "#2a2d35"
 
                 }}
 
@@ -233,7 +212,7 @@ function Sidebar() {
 
                     mt: 2,
 
-                    px: 1
+                    px: 1.5
 
                 }}
 
@@ -263,29 +242,35 @@ function Sidebar() {
 
                             sx={{
 
-                                borderRadius: 3,
+                                borderRadius: 2,
 
-                                mb: 1,
+                                mb: 0.5,
 
-                                py: 1.5,
+                                py: 1.2,
+
+                                pl: 2,
+
+                                borderLeft: "3px solid transparent",
 
                                 "&.Mui-selected": {
 
-                                    bgcolor: "#2563eb",
+                                    bgcolor: "#262a33",
 
-                                    color: "white"
+                                    borderLeftColor: "#7c93c9",
+
+                                    color: "#f2f3f5"
 
                                 },
 
                                 "&.Mui-selected:hover": {
 
-                                    bgcolor: "#1d4ed8"
+                                    bgcolor: "#2c313c"
 
                                 },
 
                                 "&:hover": {
 
-                                    bgcolor: "#1f2937"
+                                    bgcolor: "#20232a"
 
                                 }
 
@@ -293,25 +278,15 @@ function Sidebar() {
 
                         >
 
-                            <ListItemIcon
-
-                                sx={{
-
-                                    color: "inherit",
-
-                                    minWidth: 40
-
-                                }}
-
-                            >
-
-                                {item.icon}
-
-                            </ListItemIcon>
-
                             <ListItemText
 
                                 primary={item.text}
+
+                                primaryTypographyProps={{
+
+                                    fontSize: 14
+
+                                }}
 
                             />
 
@@ -337,7 +312,7 @@ function Sidebar() {
 
                 sx={{
 
-                    borderColor: "#1f2937"
+                    borderColor: "#2a2d35"
 
                 }}
 
@@ -361,9 +336,11 @@ function Sidebar() {
 
                         alignItems: "center",
 
-                        gap: 2,
+                        gap: 1.5,
 
-                        mb: 2
+                        mb: 1.5,
+
+                        px: 0.5
 
                     }}
 
@@ -373,7 +350,13 @@ function Sidebar() {
 
                         sx={{
 
-                            bgcolor: "#2563eb"
+                            bgcolor: "#3a5da8",
+
+                            width: 34,
+
+                            height: 34,
+
+                            fontSize: 15
 
                         }}
 
@@ -383,31 +366,11 @@ function Sidebar() {
 
                     </Avatar>
 
-                    <Box>
+                    <Typography sx={{ fontSize: 14 }}>
 
-                        <Typography>
+                        Mamme
 
-                            Mamme
-
-                        </Typography>
-
-                        <Typography
-
-                            variant="caption"
-
-                            sx={{
-
-                                color: "#9ca3af"
-
-                            }}
-
-                        >
-
-                            SOC Analyst
-
-                        </Typography>
-
-                    </Box>
+                    </Typography>
 
                 </Box>
 
@@ -417,31 +380,21 @@ function Sidebar() {
 
                     sx={{
 
-                        borderRadius: 3,
+                        borderRadius: 2,
 
-                        color: "#ef4444"
+                        pl: 2,
+
+                        color: "#c8837c"
 
                     }}
 
                 >
 
-                    <ListItemIcon
-
-                        sx={{
-
-                            color: "#ef4444"
-
-                        }}
-
-                    >
-
-                        <LogoutIcon/>
-
-                    </ListItemIcon>
-
                     <ListItemText
 
                         primary="Logout"
+
+                        primaryTypographyProps={{ fontSize: 14 }}
 
                     />
 

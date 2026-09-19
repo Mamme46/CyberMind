@@ -32,6 +32,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import DownloadIcon from "@mui/icons-material/Download";
 
+import DescriptionIcon from "@mui/icons-material/Description";
+
+import EmptyState from "../components/common/EmptyState";
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -122,13 +126,35 @@ function Reports(){
 
             <Paper
 
+                variant="outlined"
+
                 sx={{
 
-                    borderRadius:4
+                    borderRadius:3
 
                 }}
 
             >
+
+                {
+
+                    reports.length === 0
+
+                        ? (
+
+                            <EmptyState
+
+                                icon={<DescriptionIcon />}
+
+                                title="No reports generated yet"
+
+                                description="Generate an AI report from an alert investigation to see it listed here."
+
+                            />
+
+                        )
+
+                        : (
 
                 <Table>
 
@@ -170,7 +196,7 @@ function Reports(){
 
                             reports.map(report=>(
 
-                                <TableRow key={report.id}>
+                                <TableRow key={report.id} hover>
 
                                     <TableCell>
 
@@ -181,6 +207,8 @@ function Reports(){
                                     <TableCell>
 
                                         <Chip
+
+                                            size="small"
 
                                             label={report.severity}
 
@@ -269,6 +297,10 @@ function Reports(){
                     </TableBody>
 
                 </Table>
+
+                        )
+
+                }
 
             </Paper>
 

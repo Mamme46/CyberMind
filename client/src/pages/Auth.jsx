@@ -2,6 +2,8 @@ import { useState } from "react";
 import AuthForm from "../components/auth/AuthForm";
 import "../styles/auth.css";
 
+import SecurityIcon from "@mui/icons-material/Security";
+
 function Auth() {
 
     const [mode, setMode] = useState("login");
@@ -10,29 +12,17 @@ function Auth() {
 
         <div className="auth-container">
 
-            <div className="left-panel">
+            <div className="auth-card">
 
-                <h1>CyberMind</h1>
+                <div className="brand">
 
-                <h3>AI-Powered Security Operations Center</h3>
+                    <SecurityIcon fontSize="large" />
 
-                <ul>
+                    <h1>CyberMind</h1>
 
-                    <li>📂 Upload and analyze logs</li>
+                </div>
 
-                    <li>🛡️ Detect security threats</li>
-
-                    <li>🔍 Investigate incidents</li>
-
-                    <li>🤖 AI Security Assistant</li>
-
-                    <li>📄 Generate reports</li>
-
-                </ul>
-
-            </div>
-
-            <div className="right-panel">
+                <p className="tagline">AI-Powered Security Operations Center</p>
 
                 <div className="tabs">
 

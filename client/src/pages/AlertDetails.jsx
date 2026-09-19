@@ -350,6 +350,7 @@ function AlertDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
                     mb: 3,
@@ -370,7 +371,6 @@ function AlertDetails() {
 
                     <Typography
                         variant="h5"
-                        fontWeight="bold"
                     >
 
                         {alert.title}
@@ -502,7 +502,6 @@ function AlertDetails() {
             <Typography
                 variant="h5"
                 mb={2}
-                fontWeight="bold"
             >
 
                 Investigation Summary
@@ -551,6 +550,7 @@ function AlertDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 3,
                     mb: 4,
@@ -561,7 +561,6 @@ function AlertDetails() {
                 <Typography
                     variant="h6"
                     mb={2}
-                    fontWeight="bold"
                 >
 
                     Source IPs
@@ -610,7 +609,6 @@ function AlertDetails() {
             <Typography
                 variant="h5"
                 mb={2}
-                fontWeight="bold"
             >
 
                 Investigation Timeline
@@ -619,6 +617,7 @@ function AlertDetails() {
 
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 3,
                     borderRadius: 3,
@@ -648,12 +647,13 @@ function AlertDetails() {
                                         mb: 2,
                                         pb: 2,
                                         borderBottom:
-                                            "1px solid #ddd"
+                                            "1px solid",
+                                        borderColor: "divider"
                                     }}
                                 >
 
                                     <Typography
-                                        fontWeight="bold"
+                                        variant="subtitle2"
                                     >
 
                                         {
@@ -666,9 +666,11 @@ function AlertDetails() {
 
 
                                     <Typography
+                                        variant="caption"
                                         color="text.secondary"
                                         sx={{
-                                            mb: 1
+                                            mb: 1,
+                                            display: "block"
                                         }}
                                     >
 
@@ -875,13 +877,14 @@ function AIReport({
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3,
-                    background:
-                        "linear-gradient(135deg, #10182f 0%, #1d2b55 100%)",
-                    color: "white"
+                    bgcolor: "#1a1d24",
+                    color: "#e7e9ed",
+                    borderColor: "#1a1d24"
                 }}
             >
 
@@ -889,16 +892,16 @@ function AIReport({
                     sx={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 2,
+                        gap: 1.5,
                         mb: 2
                     }}
                 >
 
-                    <SecurityIcon />
+                    <SecurityIcon sx={{ color: "#7c93c9" }} />
 
                     <Typography
-                        variant="h4"
-                        fontWeight="bold"
+                        variant="h6"
+                        sx={{ color: "#9199a6" }}
                     >
 
                         AI Incident Report
@@ -910,7 +913,6 @@ function AIReport({
 
                 <Typography
                     variant="h5"
-                    fontWeight="bold"
                     sx={{
                         mb: 2
                     }}
@@ -933,6 +935,7 @@ function AIReport({
                 >
 
                     <Chip
+                        size="small"
                         label={
                             (
                                 assessment.severity ||
@@ -947,6 +950,7 @@ function AIReport({
                     />
 
                     <Chip
+                        size="small"
                         label={
                             `Confidence: ${
                                 assessment.confidence ||
@@ -954,9 +958,9 @@ function AIReport({
                             }`
                         }
                         sx={{
-                            color: "white",
+                            color: "#e7e9ed",
                             borderColor:
-                                "rgba(255,255,255,0.4)"
+                                "rgba(255,255,255,0.25)"
                         }
                         }
                         variant="outlined"
@@ -1136,7 +1140,8 @@ function AIReport({
                         <Box sx={{ mt: 3 }}>
 
                             <Typography
-                                fontWeight="bold"
+                                variant="subtitle2"
+                                color="text.secondary"
                                 mb={1}
                             >
 
@@ -1470,7 +1475,7 @@ function AIReport({
                                             />
 
                                             <Typography
-                                                fontWeight="bold"
+                                                variant="subtitle2"
                                             >
 
                                                 {
@@ -1616,7 +1621,7 @@ function AIReport({
                                         />
 
                                         <Typography
-                                            fontWeight="bold"
+                                            variant="subtitle2"
                                         >
 
                                             {
@@ -1695,10 +1700,11 @@ function ReportSection({
     return (
 
         <Paper
+            variant="outlined"
             sx={{
                 p: 4,
                 mb: 3,
-                borderRadius: 4
+                borderRadius: 3
             }}
         >
 
@@ -1714,8 +1720,7 @@ function ReportSection({
                 {icon}
 
                 <Typography
-                    variant="h5"
-                    fontWeight="bold"
+                    variant="h6"
                 >
 
                     {title}
@@ -1767,9 +1772,10 @@ function AnalysisBlock({
         >
 
             <Typography
-                fontWeight="bold"
+                variant="subtitle2"
+                color="text.secondary"
                 sx={{
-                    mb: 1
+                    mb: 0.5
                 }}
             >
 
@@ -1779,9 +1785,8 @@ function AnalysisBlock({
 
 
             <Typography
-                color="text.secondary"
                 sx={{
-                    lineHeight: 1.8
+                    lineHeight: 1.7
                 }}
             >
 
@@ -1862,7 +1867,7 @@ function InfoBox({
 
 
             <Typography
-                fontWeight="bold"
+                variant="subtitle2"
                 sx={{
                     mt: 0.5
                 }}
@@ -1915,7 +1920,7 @@ function EvidenceCard({
                     {icon}
 
                     <Typography
-                        fontWeight="bold"
+                        variant="subtitle2"
                     >
 
                         {title}
@@ -1931,6 +1936,7 @@ function EvidenceCard({
                         ?
 
                         <Typography
+                            variant="body2"
                             color="text.secondary"
                         >
 
@@ -2003,7 +2009,8 @@ function IndicatorList({
         >
 
             <Typography
-                fontWeight="bold"
+                variant="subtitle2"
+                color="text.secondary"
                 mb={1}
             >
 
@@ -2076,11 +2083,12 @@ function SummaryCard({
 
     return (
 
-        <Card>
+        <Card variant="outlined">
 
             <CardContent>
 
                 <Typography
+                    variant="body2"
                     color="text.secondary"
                 >
 
@@ -2091,7 +2099,6 @@ function SummaryCard({
 
                 <Typography
                     variant="h4"
-                    fontWeight="bold"
                 >
 
                     {value}
@@ -2120,19 +2127,31 @@ function InfoRow({
 
     return (
 
-        <Typography
+        <Box
             sx={{
+                display: "flex",
+                gap: 1,
                 mb: 1
             }}
         >
 
-            <strong>
-                {label}:
-            </strong>{" "}
+            <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ minWidth: 130 }}
+            >
 
-            {value || "-"}
+                {label}
 
-        </Typography>
+            </Typography>
+
+            <Typography variant="body2">
+
+                {value || "-"}
+
+            </Typography>
+
+        </Box>
 
     );
 

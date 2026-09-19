@@ -336,9 +336,10 @@ function ReportDetails() {
                 />
 
                 <Paper
+                    variant="outlined"
                     sx={{
                         p: 5,
-                        borderRadius: 4,
+                        borderRadius: 3,
                         whiteSpace: "pre-wrap"
                     }}
                 >
@@ -501,9 +502,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -517,7 +519,6 @@ function ReportDetails() {
 
                 <Typography
                     variant="h6"
-                    fontWeight="bold"
                     sx={{ mb: 2 }}
                 >
 
@@ -586,9 +587,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -636,9 +638,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -709,9 +712,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -878,9 +882,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -947,9 +952,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -1014,7 +1020,7 @@ function ReportDetails() {
                                                 />
 
                                                 <Typography
-                                                    fontWeight="bold"
+                                                    variant="subtitle2"
                                                 >
 
                                                     {
@@ -1059,9 +1065,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -1114,9 +1121,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -1199,7 +1207,7 @@ function ReportDetails() {
                                                             />
 
                                                             <Typography
-                                                                fontWeight="bold"
+                                                                variant="subtitle2"
                                                             >
 
                                                                 {
@@ -1238,9 +1246,10 @@ function ReportDetails() {
             ================================================= */}
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4,
+                    borderRadius: 3,
                     mb: 3
                 }}
             >
@@ -1332,9 +1341,10 @@ function ReportHeader({
 
 
             <Paper
+                variant="outlined"
                 sx={{
                     p: 4,
-                    borderRadius: 4
+                    borderRadius: 3
                 }}
             >
 
@@ -1353,10 +1363,10 @@ function ReportHeader({
                     <Box>
 
                         <Typography
-                            variant="h4"
-                            fontWeight="bold"
+                            variant="overline"
                             sx={{
-                                mb: 1
+                                color: "text.secondary",
+                                letterSpacing: 0.6
                             }}
                         >
 
@@ -1366,7 +1376,7 @@ function ReportHeader({
 
                         <Typography
                             variant="h5"
-                            fontWeight="bold"
+                            sx={{ mb: 1 }}
                         >
 
                             {
@@ -1376,10 +1386,8 @@ function ReportHeader({
                         </Typography>
 
                         <Typography
+                            variant="body2"
                             color="text.secondary"
-                            sx={{
-                                mt: 1
-                            }}
                         >
 
                             Model:{" "}
@@ -1388,6 +1396,7 @@ function ReportHeader({
                         </Typography>
 
                         <Typography
+                            variant="body2"
                             color="text.secondary"
                         >
 
@@ -1415,8 +1424,6 @@ function ReportHeader({
                                     "default"
                                 }
                                 sx={{
-                                    fontWeight:
-                                        "bold",
                                     px: 1
                                 }}
                             />
@@ -1464,8 +1471,7 @@ function SectionTitle({
                 }
 
                 <Typography
-                    variant="h5"
-                    fontWeight="bold"
+                    variant="h6"
                 >
 
                     {title}
@@ -1513,10 +1519,10 @@ function AnalysisBlock({
         >
 
             <Typography
-                variant="subtitle1"
-                fontWeight="bold"
+                variant="subtitle2"
+                color="text.secondary"
                 sx={{
-                    mb: 1
+                    mb: 0.5
                 }}
             >
 
@@ -1525,9 +1531,8 @@ function AnalysisBlock({
             </Typography>
 
             <Typography
-                color="text.secondary"
                 sx={{
-                    lineHeight: 1.8
+                    lineHeight: 1.7
                 }}
             >
 
@@ -1577,7 +1582,7 @@ function InfoBadge({
             </Typography>
 
             <Typography
-                fontWeight="bold"
+                variant="subtitle2"
             >
 
                 {value}
@@ -1630,7 +1635,7 @@ function EvidenceCard({
                 {icon}
 
                 <Typography
-                    fontWeight="bold"
+                    variant="subtitle2"
                 >
 
                     {title}
@@ -1713,7 +1718,8 @@ function IndicatorSection({
         >
 
             <Typography
-                fontWeight="bold"
+                variant="subtitle2"
+                color="text.secondary"
                 sx={{
                     mb: 1
                 }}

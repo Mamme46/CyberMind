@@ -34,25 +34,37 @@ function MessageBubble({ role, content }) {
 
             <Paper
 
+                variant={isUser ? "elevation" : "outlined"}
+
+                elevation={0}
+
                 sx={{
 
                     p: 2,
 
                     maxWidth: "70%",
 
+                    borderRadius: 3,
+
                     bgcolor: isUser
 
-                        ? "#1976d2"
+                        ? "#3a5da8"
 
-                        : "#2d3748",
+                        : "background.paper",
 
-                    color: "white"
+                    color: isUser
+
+                        ? "#ffffff"
+
+                        : "text.primary"
 
                 }}
 
             >
 
                 <Typography
+
+                    variant="body2"
 
                     sx={{
 

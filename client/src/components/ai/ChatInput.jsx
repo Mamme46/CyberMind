@@ -2,11 +2,13 @@ import {
 
     Box,
 
-    Button,
+    IconButton,
 
     TextField
 
 } from "@mui/material";
+
+import SendIcon from "@mui/icons-material/Send";
 
 import {
 
@@ -38,11 +40,15 @@ function ChatInput({ onSend }) {
 
                 display: "flex",
 
-                gap: 2,
+                alignItems: "center",
+
+                gap: 1.5,
 
                 p: 2,
 
-                borderTop: "1px solid #ddd"
+                borderTop: "1px solid",
+
+                borderColor: "divider"
 
             }}
 
@@ -51,6 +57,8 @@ function ChatInput({ onSend }) {
             <TextField
 
                 fullWidth
+
+                size="small"
 
                 placeholder="Ask CyberMind AI..."
 
@@ -72,17 +80,31 @@ function ChatInput({ onSend }) {
 
             />
 
-            <Button
+            <IconButton
 
-                variant="contained"
+                color="primary"
 
                 onClick={send}
 
+                disabled={!message.trim()}
+
+                sx={{
+
+                    bgcolor: "primary.main",
+
+                    color: "white",
+
+                    "&:hover": { bgcolor: "primary.dark" },
+
+                    "&.Mui-disabled": { bgcolor: "action.disabledBackground" }
+
+                }}
+
             >
 
-                Send
+                <SendIcon fontSize="small" />
 
-            </Button>
+            </IconButton>
 
         </Box>
 

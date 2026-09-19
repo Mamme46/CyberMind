@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
 
@@ -14,15 +14,23 @@ import {
 
     Button,
 
-    Divider
+    Divider,
+
+    Box,
+
+    CircularProgress
 
 } from "@mui/material";
 
 import { getUpload } from "../api/upload.api";
 
+import Layout from "../components/layout/Layout";
+
 function UploadDetails() {
 
     const { id } = useParams();
+
+    const navigate = useNavigate();
 
     const [upload, setUpload] = useState(null);
 
@@ -42,15 +50,41 @@ function UploadDetails() {
 
     if (!upload)
 
-        return <Typography>Loading...</Typography>;
+        return (
+
+            <Layout>
+
+                <Box
+
+                    sx={{
+
+                        display: "flex",
+
+                        justifyContent: "center",
+
+                        mt: 10
+
+                    }}
+
+                >
+
+                    <CircularProgress />
+
+                </Box>
+
+            </Layout>
+
+        );
 
     return (
 
-        <Card sx={{ m: 4 }}>
+        <Layout>
 
-            <CardContent>
+        <Card variant="outlined" sx={{ borderRadius: 3 }}>
 
-                <Typography variant="h4">
+            <CardContent sx={{ p: 4 }}>
+
+                <Typography variant="h5">
 
                     {upload.original_name}
 
@@ -62,19 +96,17 @@ function UploadDetails() {
 
                     <Grid size={{ xs: 6 }}>
 
-                        <Typography>
+                        <Typography variant="caption" color="text.secondary" display="block">ID</Typography>
 
-                            <strong>ID :</strong> {upload.id}
-
-                        </Typography>
+                        <Typography variant="body2">{upload.id}</Typography>
 
                     </Grid>
 
                     <Grid size={{ xs: 6 }}>
 
-                        <Typography>
+                        <Typography variant="caption" color="text.secondary" display="block">Date</Typography>
 
-                            <strong>Date :</strong>{" "}
+                        <Typography variant="body2">
 
                             {
 
@@ -92,25 +124,17 @@ function UploadDetails() {
 
                     <Grid size={{ xs: 6 }}>
 
-                        <Typography>
+                        <Typography variant="caption" color="text.secondary" display="block">Type</Typography>
 
-                            <strong>Type :</strong>
-
-                            {upload.mime_type}
-
-                        </Typography>
+                        <Typography variant="body2">{upload.mime_type}</Typography>
 
                     </Grid>
 
                     <Grid size={{ xs: 6 }}>
 
-                        <Typography>
+                        <Typography variant="caption" color="text.secondary" display="block">Size</Typography>
 
-                            <strong>Size :</strong>
-
-                            {upload.file_size} bytes
-
-                        </Typography>
+                        <Typography variant="body2">{upload.file_size} bytes</Typography>
 
                     </Grid>
 
@@ -118,13 +142,15 @@ function UploadDetails() {
 
                 <Divider sx={{ my: 4 }}/>
 
-                <Grid container spacing={2}>
+                <Grid container spacing={1.5}>
 
                     <Grid>
 
                         <Button
 
                             variant="contained"
+
+                            onClick={() => navigate(`/uploads/${id}/logs`)}
 
                         >
 
@@ -138,45 +164,13 @@ function UploadDetails() {
 
                         <Button
 
-                            variant="contained"
+                            variant="outlined"
 
-                            color="warning"
+                            onClick={() => navigate(`/alerts?uploadId=${id}`)}
 
                         >
 
                             Alerts
-
-                        </Button>
-
-                    </Grid>
-
-                    <Grid>
-
-                        <Button
-
-                            variant="contained"
-
-                            color="success"
-
-                        >
-
-                            Investigation
-
-                        </Button>
-
-                    </Grid>
-
-                    <Grid>
-
-                        <Button
-
-                            variant="contained"
-
-                            color="secondary"
-
-                        >
-
-                            AI Analysis
 
                         </Button>
 
@@ -187,6 +181,8 @@ function UploadDetails() {
             </CardContent>
 
         </Card>
+
+        </Layout>
 
     );
 
