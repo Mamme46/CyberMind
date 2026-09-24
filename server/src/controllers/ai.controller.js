@@ -52,6 +52,8 @@ class AIController {
 
         } = req.body;
 
+        let isNewConversation = false;
+
         if (!conversationId) {
 
             const conversation =
@@ -63,6 +65,24 @@ class AIController {
                 );
 
             conversationId = conversation.id;
+
+            isNewConversation = true;
+
+        }
+
+        else {
+
+            const existing =
+
+                await AIConversationService.getConversation(
+
+                    conversationId
+
+                );
+
+            isNewConversation =
+                !existing.messages ||
+                existing.messages.length === 0;
 
         }
 
@@ -144,19 +164,22 @@ class AIController {
 
                     );
 
-                    const title = message.length > 40
+                    if (isNewConversation) {
 
-                        ? message.substring(0, 40) + "..."
+                        const title =
+                            await AIService.generateTitle(
+                                message
+                            );
 
-                        : message;
+                        await AIConversationService.renameConversation(
 
-                    await AIConversationService.renameConversation(
+                            conversationId,
 
-                        conversationId,
+                            title
 
-                        title
+                        );
 
-                    );
+                    }
 
                 }
 

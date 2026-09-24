@@ -68,11 +68,11 @@ Respond ONLY in JSON.
 
         return `
 
-You are a Senior SOC Analyst specialized in cybersecurity
-incident investigation.
-
-Your task is to analyze the security alert and its associated
-events and produce a professional incident report.
+You are a Senior SOC Analyst writing an official incident
+report for a security team. Your audience is other analysts
+and management who were not present during the investigation,
+so every statement must be self-contained, specific and
+grounded in the data below.
 
 IMPORTANT RULES:
 
@@ -81,10 +81,20 @@ IMPORTANT RULES:
    timestamps or other facts.
 3. Do NOT assume that an event occurred if it is not present.
 4. Clearly distinguish observed facts from your assessment.
-5. Keep the report concise and technically accurate.
-6. Return ONLY valid JSON.
-7. Do not use Markdown.
-8. Do not add explanations outside the JSON object.
+5. Reference the actual hosts, usernames, IPs, ports, commands
+   and timestamps from the DETECTION and RELATED EVENTS
+   sections wherever relevant, instead of speaking in
+   generalities.
+6. Every field below must contain real, substantive analysis.
+   Never return an empty string, "N/A", "-", "unknown" or any
+   other placeholder. If a data point is genuinely absent from
+   the evidence, say so explicitly in a full sentence (for
+   example "No destination IP was captured for this event.").
+7. Write in clear, professional, technical English, the way a
+   real SOC report reads — full sentences, no bullet-only
+   fragments, no Markdown.
+8. Return ONLY valid JSON, matching the structure below
+   exactly. No explanations outside the JSON object.
 
 ============================================================
 ALERT
@@ -131,39 +141,17 @@ Return exactly this JSON structure:
         "impact": ""
     },
 
-    "findings": [
-        {
-            "title": "",
-            "description": "",
-            "evidence": [],
-            "severity": ""
-        }
-    ],
+    "technical_analysis": {
+        "what_happened": "",
+        "detection_reason": "",
+        "evidence_analysis": "",
+        "affected_entities": ""
+    },
 
-    "timeline": [
-        {
-            "time": "",
-            "event": "",
-            "description": ""
-        }
-    ],
-
-    "mitre": [
-        {
-            "id": "",
-            "name": "",
-            "reason": ""
-        }
-    ],
-
-    "indicators": {
-        "source_ips": [],
-        "destination_ips": [],
-        "usernames": [],
-        "hostnames": [],
-        "domains": [],
-        "ports": [],
-        "commands": []
+    "risk_assessment": {
+        "level": "",
+        "impact": "",
+        "uncertainties": ""
     },
 
     "recommendations": [
@@ -178,30 +166,60 @@ Return exactly this JSON structure:
 }
 
 ============================================================
-REPORT QUALITY
+FIELD-BY-FIELD GUIDANCE
 ============================================================
 
-The assessment must explain:
+assessment.summary: 2-3 sentences giving a management-level
+overview of the incident: what was detected, on which system,
+and why it matters.
 
-- What happened
-- Why the detection was triggered
-- What evidence supports the detection
-- Which systems or accounts are involved
-- What the potential impact is
-- What should be done next
+assessment.attack_type: the short technical name of the
+attack or technique observed (e.g. "Reverse Shell",
+"Brute Force Authentication", "DNS Spoofing").
 
-The findings must be based on actual events.
+assessment.confidence: "Low", "Medium" or "High", based on how
+directly the evidence supports the conclusion.
 
-The timeline must use the timestamps from the events.
+assessment.impact: one sentence stating the concrete
+consequence if the activity is not contained.
 
-MITRE ATT&CK techniques must only be included when they
-reasonably correspond to the observed behavior.
+technical_analysis.what_happened: 2-4 sentences narrating the
+sequence of events in the order they occurred, naming the
+specific host(s), user(s), IP(s) and command(s) involved.
 
-Indicators of compromise must contain only observable values
-present in the alert or events.
+technical_analysis.detection_reason: explain precisely which
+behavior or pattern in the events triggered this detection
+rule (e.g. a specific process, command syntax, connection
+pattern, or repeated failure count).
 
-Recommendations must be practical and relevant to the
-detected incident.
+technical_analysis.evidence_analysis: interpret what the
+observed commands or network activity indicate about the
+attacker's technique or intent, referencing the actual
+evidence.
+
+technical_analysis.affected_entities: list, in prose, the
+hosts, accounts and services impacted by this incident.
+
+risk_assessment.level: "Critical", "High", "Medium" or "Low".
+
+risk_assessment.impact: 1-2 sentences on the potential
+business or technical impact if this incident is left
+unaddressed.
+
+risk_assessment.uncertainties: state what is NOT yet known
+from the available evidence and would require further
+investigation to confirm (e.g. whether the attacker achieved
+persistence, scope of data accessed). If the evidence is
+conclusive, say so explicitly instead of leaving this blank.
+
+recommendations: 2-4 concrete, prioritized actions a SOC
+analyst should take next, each with a "priority" of
+"Critical", "High", "Medium" or "Low", a short imperative
+"action", and a "reason" explaining why it matters for this
+specific incident.
+
+conclusion: 2-3 sentences summarizing the incident and the
+overall recommended posture (contain, monitor, or escalate).
 
 Return ONLY the JSON object.
 

@@ -149,9 +149,35 @@ function AIAssistant() {
 
     async function handleSend(message) {
 
-        if (!selectedConversation)
+        let conversation = selectedConversation;
 
-            return;
+        if (!conversation) {
+
+            try {
+
+                conversation = await createConversation();
+
+                setConversations(previous => [
+
+                    conversation,
+
+                    ...previous
+
+                ]);
+
+                setSelectedConversation(conversation);
+
+            }
+
+            catch (err) {
+
+                console.error(err);
+
+                return;
+
+            }
+
+        }
 
         setMessages(previous => [
 
@@ -181,7 +207,7 @@ function AIAssistant() {
 
             await streamChat(
 
-                selectedConversation.id,
+                conversation.id,
 
                 message,
 

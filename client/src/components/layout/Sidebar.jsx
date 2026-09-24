@@ -282,9 +282,13 @@ function Sidebar({ open = true }) {
 
                                 primary={item.text}
 
-                                primaryTypographyProps={{
+                                slotProps={{
 
-                                    fontSize: 14
+                                    primary: {
+
+                                        fontSize: 14
+
+                                    }
 
                                 }}
 
@@ -394,7 +398,7 @@ function Sidebar({ open = true }) {
 
                         primary="Logout"
 
-                        primaryTypographyProps={{ fontSize: 14 }}
+                        slotProps={{ primary: { fontSize: 14 } }}
 
                     />
 

@@ -176,14 +176,6 @@ function ConversationSidebar({
 
                                 primary={conversation.title}
 
-                                primaryTypographyProps={{
-
-                                    noWrap: true,
-
-                                    fontSize: 14
-
-                                }}
-
                                 secondary={
 
                                     new Date(
@@ -194,9 +186,21 @@ function ConversationSidebar({
 
                                 }
 
-                                secondaryTypographyProps={{
+                                slotProps={{
 
-                                    fontSize: 12
+                                    primary: {
+
+                                        noWrap: true,
+
+                                        fontSize: 14
+
+                                    },
+
+                                    secondary: {
+
+                                        fontSize: 12
+
+                                    }
 
                                 }}
 

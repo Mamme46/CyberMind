@@ -379,12 +379,6 @@ function Uploads() {
                                         upload.original_name
                                     }
 
-                                    primaryTypographyProps={{
-
-                                        fontWeight: 600
-
-                                    }}
-
                                     secondary={
 
                                         new Date(
@@ -394,6 +388,16 @@ function Uploads() {
                                         ).toLocaleString()
 
                                     }
+
+                                    slotProps={{
+
+                                        primary: {
+
+                                            fontWeight: 600
+
+                                        }
+
+                                    }}
 
                                 />
 

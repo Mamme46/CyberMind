@@ -1390,16 +1390,6 @@ function ReportHeader({
                             color="text.secondary"
                         >
 
-                            Model:{" "}
-                            {report.model}
-
-                        </Typography>
-
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                        >
-
                             Generated:{" "}
                             {
                                 formatDate(

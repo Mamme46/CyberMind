@@ -276,6 +276,8 @@ class ReportController {
 
                 dark: "#172033",
 
+                accent: "#3a5da8",
+
                 secondary: "#5f6b7a",
 
                 border: "#d9dee7",
@@ -342,15 +344,33 @@ class ReportController {
 
                 addPageIfNeeded(70);
 
-                doc
-                    .moveDown(0.5)
-                    .fontSize(17)
-                    .font("Helvetica-Bold")
-                    .fillColor(colors.dark)
-                    .text(title);
+                doc.moveDown(0.6);
+
+                const barTop = doc.y + 2;
 
                 doc
-                    .moveDown(0.25)
+                    .rect(
+                        doc.page.margins.left,
+                        barTop,
+                        3,
+                        14
+                    )
+                    .fill(colors.accent);
+
+                doc
+                    .fontSize(15)
+                    .font("Helvetica-Bold")
+                    .fillColor(colors.dark)
+                    .text(
+                        title,
+                        doc.page.margins.left + 12,
+                        doc.y
+                    );
+
+                doc.x = doc.page.margins.left;
+
+                doc
+                    .moveDown(0.3)
                     .strokeColor(colors.border)
                     .moveTo(
                         doc.page.margins.left,
@@ -369,56 +389,524 @@ class ReportController {
             }
 
 
+            function severityBadge(
+                label,
+                color
+            ) {
+
+                addPageIfNeeded(40);
+
+                const paddingX = 10;
+                const height = 20;
+
+                doc
+                    .font("Helvetica-Bold")
+                    .fontSize(9);
+
+                const textWidth =
+                    doc.widthOfString(
+                        label.toUpperCase()
+                    );
+
+                const width =
+                    textWidth + paddingX * 2;
+
+                const x = doc.page.margins.left;
+                const y = doc.y;
+
+                doc
+                    .roundedRect(x, y, width, height, 3)
+                    .fill(color);
+
+                doc
+                    .fillColor("#ffffff")
+                    .text(
+                        label.toUpperCase(),
+                        x,
+                        y + 5.5,
+                        {
+                            width,
+                            align: "center"
+                        }
+                    );
+
+                doc.x = doc.page.margins.left;
+                doc.y = y + height + 14;
+
+            }
+
+
             function labelValue(
                 label,
                 value
             ) {
 
-                addPageIfNeeded(35);
+                const boxX =
+                    doc.page.margins.left;
+
+                const boxWidth =
+                    doc.page.width -
+                    doc.page.margins.left -
+                    doc.page.margins.right;
+
+                const accentWidth = 3;
+                const innerPaddingX = 12;
+                const innerPaddingY = 9;
+
+                const contentWidth =
+                    boxWidth -
+                    accentWidth -
+                    innerPaddingX * 2;
+
+                const labelText =
+                    label.toUpperCase();
+
+                const valueText =
+                    safe(value);
 
                 doc
                     .font("Helvetica-Bold")
-                    .fontSize(10)
-                    .fillColor(colors.secondary)
-                    .text(
-                        label
+                    .fontSize(8.5);
+
+                const labelHeight =
+                    doc.heightOfString(
+                        labelText,
+                        {
+                            width: contentWidth,
+                            characterSpacing: 0.3
+                        }
                     );
 
                 doc
                     .font("Helvetica")
-                    .fontSize(11)
-                    .fillColor("#000000")
-                    .text(
-                        safe(value)
+                    .fontSize(10.5);
+
+                const valueHeight =
+                    doc.heightOfString(
+                        valueText,
+                        {
+                            width: contentWidth,
+                            lineGap: 2
+                        }
                     );
 
-                doc.moveDown(0.45);
+                const gap = 4;
 
-            }
+                const totalHeight =
+                    innerPaddingY * 2 +
+                    labelHeight +
+                    gap +
+                    valueHeight;
 
+                addPageIfNeeded(totalHeight + 10);
 
-            function bullet(
-                text
-            ) {
+                const boxY = doc.y;
 
-                addPageIfNeeded(35);
+                doc
+                    .roundedRect(
+                        boxX,
+                        boxY,
+                        boxWidth,
+                        totalHeight,
+                        4
+                    )
+                    .fillAndStroke(
+                        colors.light,
+                        colors.border
+                    );
+
+                doc
+                    .rect(
+                        boxX,
+                        boxY,
+                        accentWidth,
+                        totalHeight
+                    )
+                    .fill(colors.accent);
+
+                const textX =
+                    boxX +
+                    accentWidth +
+                    innerPaddingX;
+
+                doc
+                    .font("Helvetica-Bold")
+                    .fontSize(8.5)
+                    .fillColor(colors.accent)
+                    .text(
+                        labelText,
+                        textX,
+                        boxY + innerPaddingY,
+                        {
+                            width: contentWidth,
+                            characterSpacing: 0.3
+                        }
+                    );
 
                 doc
                     .font("Helvetica")
                     .fontSize(10.5)
                     .fillColor("#000000")
                     .text(
-                        `• ${safe(text)}`,
+                        valueText,
+                        textX,
+                        boxY +
+                        innerPaddingY +
+                        labelHeight +
+                        gap,
                         {
-                            width:
-                                doc.page.width -
-                                doc.page.margins.left -
-                                doc.page.margins.right -
-                                10
+                            width: contentWidth,
+                            lineGap: 2
                         }
                     );
 
-                doc.moveDown(0.25);
+                doc.x = boxX;
+                doc.y = boxY + totalHeight + 8;
+
+            }
+
+
+            function chipRow(
+                label,
+                values
+            ) {
+
+                addPageIfNeeded(40);
+
+                doc
+                    .font("Helvetica-Bold")
+                    .fontSize(9)
+                    .fillColor(colors.secondary)
+                    .text(
+                        label.toUpperCase(),
+                        { characterSpacing: 0.3 }
+                    );
+
+                doc.moveDown(0.3);
+
+                const safeValues =
+                    Array.isArray(values)
+                        ? values.filter(Boolean)
+                        : [];
+
+                if (safeValues.length === 0) {
+
+                    doc
+                        .font("Helvetica")
+                        .fontSize(10)
+                        .fillColor(colors.secondary)
+                        .text("None observed.");
+
+                    doc.x = doc.page.margins.left;
+                    doc.moveDown(0.7);
+
+                    return;
+
+                }
+
+                const startX =
+                    doc.page.margins.left;
+
+                const maxX =
+                    doc.page.width -
+                    doc.page.margins.right;
+
+                const chipHeight = 18;
+                const paddingX = 8;
+                const gap = 6;
+
+                let x = startX;
+                let y = doc.y;
+
+                doc.font("Helvetica").fontSize(9);
+
+                for (const value of safeValues) {
+
+                    const text = String(value);
+
+                    const textWidth =
+                        doc.widthOfString(text);
+
+                    const chipWidth =
+                        textWidth + paddingX * 2;
+
+                    if (x + chipWidth > maxX) {
+
+                        x = startX;
+                        y += chipHeight + gap;
+
+                    }
+
+                    if (
+                        y + chipHeight >
+                        doc.page.height -
+                        doc.page.margins.bottom
+                    ) {
+
+                        doc.addPage();
+                        y = doc.page.margins.top;
+                        x = startX;
+
+                    }
+
+                    doc
+                        .roundedRect(
+                            x,
+                            y,
+                            chipWidth,
+                            chipHeight,
+                            3
+                        )
+                        .fillAndStroke(
+                            colors.light,
+                            colors.border
+                        );
+
+                    doc
+                        .fillColor(colors.dark)
+                        .text(
+                            text,
+                            x + paddingX,
+                            y + 4.5,
+                            {
+                                width: textWidth,
+                                lineBreak: false
+                            }
+                        );
+
+                    x += chipWidth + gap;
+
+                }
+
+                doc.x = startX;
+                doc.y = y + chipHeight + 16;
+
+            }
+
+
+            function timelineEvent(
+                event
+            ) {
+
+                const boxX =
+                    doc.page.margins.left;
+
+                const boxWidth =
+                    doc.page.width -
+                    doc.page.margins.left -
+                    doc.page.margins.right;
+
+                const innerPaddingX = 12;
+
+                const contentWidth =
+                    boxWidth -
+                    innerPaddingX * 2;
+
+                const timeText =
+                    safe(event.time);
+
+                const typeText =
+                    safe(
+                        event.event ||
+                        event.type
+                    );
+
+                const metaParts = [];
+
+                if (
+                    event.host ||
+                    event.hostname
+                ) {
+
+                    metaParts.push(
+                        `Host: ${safe(
+                            event.host ||
+                            event.hostname
+                        )}`
+                    );
+
+                }
+
+                if (
+                    event.source ||
+                    event.sourceIp
+                ) {
+
+                    metaParts.push(
+                        `Source: ${safe(
+                            event.source ||
+                            event.sourceIp
+                        )}`
+                    );
+
+                }
+
+                if (
+                    event.destination ||
+                    event.destinationIp
+                ) {
+
+                    metaParts.push(
+                        `Destination: ${safe(
+                            event.destination ||
+                            event.destinationIp
+                        )}`
+                    );
+
+                }
+
+                const metaText =
+                    metaParts.join("    •    ");
+
+                const descText =
+                    event.description
+                        ? safe(event.description)
+                        : "";
+
+                doc.font("Helvetica-Bold").fontSize(10);
+
+                const timeHeight =
+                    doc.heightOfString(
+                        timeText,
+                        { width: contentWidth }
+                    );
+
+                doc.font("Helvetica-Bold").fontSize(11);
+
+                const typeHeight =
+                    doc.heightOfString(
+                        typeText,
+                        { width: contentWidth }
+                    );
+
+                doc.font("Helvetica").fontSize(9.5);
+
+                const metaHeight =
+                    metaParts.length
+                        ? doc.heightOfString(
+                            metaText,
+                            { width: contentWidth }
+                        )
+                        : 0;
+
+                doc.font("Helvetica").fontSize(10);
+
+                const descHeight =
+                    descText
+                        ? doc.heightOfString(
+                            descText,
+                            {
+                                width: contentWidth,
+                                lineGap: 2
+                            }
+                        )
+                        : 0;
+
+                const paddingY = 12;
+                const gapBetween = 5;
+
+                const totalHeight =
+                    paddingY * 2 +
+                    timeHeight +
+                    gapBetween +
+                    typeHeight +
+                    (
+                        metaParts.length
+                            ? gapBetween + metaHeight
+                            : 0
+                    ) +
+                    (
+                        descText
+                            ? gapBetween + descHeight
+                            : 0
+                    );
+
+                addPageIfNeeded(totalHeight + 16);
+
+                const boxY = doc.y;
+
+                doc
+                    .roundedRect(
+                        boxX,
+                        boxY,
+                        boxWidth,
+                        totalHeight,
+                        4
+                    )
+                    .fillAndStroke(
+                        colors.light,
+                        colors.border
+                    );
+
+                let cursorY =
+                    boxY + paddingY;
+
+                const textX =
+                    boxX + innerPaddingX;
+
+                doc
+                    .font("Helvetica-Bold")
+                    .fontSize(10)
+                    .fillColor(colors.accent)
+                    .text(
+                        timeText,
+                        textX,
+                        cursorY,
+                        { width: contentWidth }
+                    );
+
+                cursorY += timeHeight + gapBetween;
+
+                doc
+                    .font("Helvetica-Bold")
+                    .fontSize(11)
+                    .fillColor("#000000")
+                    .text(
+                        typeText,
+                        textX,
+                        cursorY,
+                        { width: contentWidth }
+                    );
+
+                cursorY += typeHeight + gapBetween;
+
+                if (metaParts.length) {
+
+                    doc
+                        .font("Helvetica")
+                        .fontSize(9.5)
+                        .fillColor(colors.secondary)
+                        .text(
+                            metaText,
+                            textX,
+                            cursorY,
+                            { width: contentWidth }
+                        );
+
+                    cursorY += metaHeight + gapBetween;
+
+                }
+
+                if (descText) {
+
+                    doc
+                        .font("Helvetica")
+                        .fontSize(10)
+                        .fillColor("#000000")
+                        .text(
+                            descText,
+                            textX,
+                            cursorY,
+                            {
+                                width: contentWidth,
+                                lineGap: 2
+                            }
+                        );
+
+                }
+
+                doc.x = boxX;
+                doc.y = boxY + totalHeight + 12;
 
             }
 
@@ -473,53 +961,41 @@ class ReportController {
              * -------------------------------------------------
              */
 
-            doc
-                .font("Helvetica-Bold")
-                .fontSize(24)
-                .fillColor(colors.dark)
-                .text(
-                    "CyberMind"
-                );
-
+            const bandHeight = 64;
 
             doc
-                .font("Helvetica")
-                .fontSize(15)
-                .fillColor(colors.secondary)
-                .text(
-                    "AI Security Incident Report"
-                );
-
-
-            doc.moveDown(1);
-
+                .rect(0, 0, doc.page.width, bandHeight)
+                .fill(colors.dark);
 
             doc
                 .font("Helvetica-Bold")
-                .fontSize(20)
+                .fontSize(16)
+                .fillColor("#ffffff")
+                .text(
+                    "Security Incident Report",
+                    0,
+                    bandHeight / 2 - 8,
+                    {
+                        align: "center",
+                        width: doc.page.width
+                    }
+                );
+
+            doc.x = doc.page.margins.left;
+            doc.y = bandHeight + 26;
+
+
+            doc
+                .font("Helvetica-Bold")
+                .fontSize(19)
                 .fillColor("#000000")
                 .text(
                     safe(report.title)
                 );
 
+            doc.x = doc.page.margins.left;
 
-            doc.moveDown(0.5);
-
-
-            labelValue(
-                "Model",
-                report.model
-            );
-
-
-            labelValue(
-                "Generated",
-                report.created_at
-                    ? new Date(
-                        report.created_at
-                    ).toLocaleString()
-                    : "-"
-            );
+            doc.moveDown(0.8);
 
 
             /*
@@ -532,23 +1008,10 @@ class ReportController {
                 data.assessment?.severity ||
                 "Unknown";
 
-
-            doc
-                .font("Helvetica-Bold")
-                .fontSize(11)
-                .fillColor(
-                    getSeverityColor(
-                        severity
-                    )
-                )
-                .text(
-                    `SEVERITY: ${String(
-                        severity
-                    ).toUpperCase()}`
-                );
-
-
-            doc.moveDown(1);
+            severityBadge(
+                `Severity: ${severity}`,
+                getSeverityColor(severity)
+            );
 
 
             /*
@@ -647,35 +1110,27 @@ class ReportController {
                 {};
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Hosts",
-                evidence.hosts,
-                bullet
+                evidence.hosts
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Users",
-                evidence.users,
-                bullet
+                evidence.users
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Source IPs",
-                evidence.source_ips,
-                bullet
+                evidence.source_ips
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Destination IPs",
-                evidence.destination_ips,
-                bullet
+                evidence.destination_ips
             );
 
 
@@ -685,6 +1140,8 @@ class ReportController {
                 ) &&
                 evidence.commands.length > 0
             ) {
+
+                addPageIfNeeded(60);
 
                 doc
                     .font("Helvetica-Bold")
@@ -762,114 +1219,7 @@ class ReportController {
                     of timeline
                 ) {
 
-                    addPageIfNeeded(100);
-
-
-                    doc
-                        .font("Helvetica-Bold")
-                        .fontSize(10.5)
-                        .fillColor(colors.dark)
-                        .text(
-                            safe(
-                                event.time
-                            )
-                        );
-
-
-                    doc
-                        .font("Helvetica-Bold")
-                        .fontSize(11)
-                        .fillColor("#000000")
-                        .text(
-                            safe(
-                                event.event ||
-                                event.type
-                            )
-                        );
-
-
-                    if (
-                        event.host
-                        ||
-                        event.hostname
-                    ) {
-
-                        doc
-                            .font("Helvetica")
-                            .fontSize(10)
-                            .text(
-                                `Host: ${safe(
-                                    event.host ||
-                                    event.hostname
-                                )}`
-                            );
-
-                    }
-
-
-                    if (
-                        event.source
-                        ||
-                        event.sourceIp
-                    ) {
-
-                        doc
-                            .font("Helvetica")
-                            .fontSize(10)
-                            .text(
-                                `Source: ${safe(
-                                    event.source ||
-                                    event.sourceIp
-                                )}`
-                            );
-
-                    }
-
-
-                    if (
-                        event.destination
-                        ||
-                        event.destinationIp
-                    ) {
-
-                        doc
-                            .font("Helvetica")
-                            .fontSize(10)
-                            .text(
-                                `Destination: ${safe(
-                                    event.destination ||
-                                    event.destinationIp
-                                )}`
-                            );
-
-                    }
-
-
-                    paragraph(
-                        event.description
-                    );
-
-
-                    doc.moveDown(0.4);
-
-
-                    doc
-                        .strokeColor(
-                            colors.border
-                        )
-                        .moveTo(
-                            doc.page.margins.left,
-                            doc.y
-                        )
-                        .lineTo(
-                            doc.page.width -
-                            doc.page.margins.right,
-                            doc.y
-                        )
-                        .stroke();
-
-
-                    doc.moveDown(0.6);
+                    timelineEvent(event);
 
                 }
 
@@ -892,59 +1242,45 @@ class ReportController {
                 {};
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Source IPs",
-                indicators.source_ips,
-                bullet
+                indicators.source_ips
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Destination IPs",
-                indicators.destination_ips,
-                bullet
+                indicators.destination_ips
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Usernames",
-                indicators.usernames,
-                bullet
+                indicators.usernames
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Hostnames",
-                indicators.hostnames,
-                bullet
+                indicators.hostnames
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Domains",
-                indicators.domains,
-                bullet
+                indicators.domains
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Ports",
-                indicators.ports,
-                bullet
+                indicators.ports
             );
 
 
-            writeListSection(
-                doc,
+            chipRow(
                 "Commands",
-                indicators.commands,
-                bullet
+                indicators.commands
             );
 
 
@@ -1148,6 +1484,9 @@ class ReportController {
             const pageRange =
                 doc.bufferedPageRange();
 
+            const originalBottomMargin =
+                doc.page.margins.bottom;
+
 
             for (
                 let i = 0;
@@ -1159,24 +1498,36 @@ class ReportController {
                     pageRange.start + i
                 );
 
+                /*
+                 * The footer is drawn inside the bottom
+                 * margin, which would otherwise make PDFKit
+                 * think the content overflows and silently
+                 * insert an extra blank page per page.
+                 */
+
+                doc.page.margins.bottom = 0;
 
                 doc
                     .font("Helvetica")
                     .fontSize(8)
                     .fillColor(colors.secondary)
                     .text(
-                        `CyberMind AI Incident Report  •  Page ${
+                        `Page ${
                             i + 1
-                        }`,
+                        } of ${pageRange.count}`,
                         50,
                         doc.page.height - 35,
                         {
                             align: "center",
                             width:
                                 doc.page.width -
-                                100
+                                100,
+                            lineBreak: false
                         }
                     );
+
+                doc.page.margins.bottom =
+                    originalBottomMargin;
 
             }
 
@@ -1224,57 +1575,6 @@ class ReportController {
  * HELPERS
  * =============================================================
  */
-
-
-function writeListSection(
-    doc,
-    title,
-    values,
-    bulletFunction
-) {
-
-    doc
-        .font("Helvetica-Bold")
-        .fontSize(11)
-        .fillColor("#172033")
-        .text(title);
-
-    doc.moveDown(0.3);
-
-
-    if (
-        !Array.isArray(values)
-        ||
-        values.length === 0
-    ) {
-
-        doc
-            .font("Helvetica")
-            .fontSize(10)
-            .fillColor("#5f6b7a")
-            .text(
-                "None observed."
-            );
-
-        doc.moveDown(0.6);
-
-        return;
-
-    }
-
-
-    for (
-        const value
-        of values
-    ) {
-
-        bulletFunction(
-            String(value)
-        );
-
-    }
-
-}
 
 
 function getSeverityColor(
