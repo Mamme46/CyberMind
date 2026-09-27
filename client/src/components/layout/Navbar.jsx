@@ -69,6 +69,8 @@ function Navbar({ sidebarOpen = true, onToggleSidebar }) {
 
                     display: "flex",
 
+                    alignItems: "center",
+
                     justifyContent: "space-between"
 
                 }}
@@ -107,35 +109,15 @@ function Navbar({ sidebarOpen = true, onToggleSidebar }) {
 
                     </Tooltip>
 
-                    <Box>
+                    <Typography
 
-                        <Typography
+                        variant="h6"
 
-                            variant="h6"
+                    >
 
-                        >
+                        {getTitle()}
 
-                            {getTitle()}
-
-                        </Typography>
-
-                        <Typography
-
-                            variant="caption"
-
-                            sx={{
-
-                                color: "#9199a6"
-
-                            }}
-
-                        >
-
-                            CyberMind Security Platform
-
-                        </Typography>
-
-                    </Box>
+                    </Typography>
 
                 </Box>
 
