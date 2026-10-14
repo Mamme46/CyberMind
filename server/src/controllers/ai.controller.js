@@ -96,11 +96,18 @@ class AIController {
 
         );
 
+        const { messages } =
+            await AIConversationService.getConversation(
+                conversationId
+            );
+
         const ollamaResponse = await AIService.chat(
 
             alertId,
 
-            message
+            message,
+
+            messages
 
         );
 
@@ -163,6 +170,13 @@ class AIController {
                         finalResponse
 
                     );
+
+                    /*
+                     * The answer is complete and saved: close the response
+                     * now so the user is not kept waiting while the title
+                     * is generated (a second, slow call to the model).
+                     */
+                    res.end();
 
                     if (isNewConversation) {
 

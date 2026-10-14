@@ -2,13 +2,58 @@ const axios = require("axios");
 
 const env = require("../../config/env");
 
+/*
+ * By default Ollama uses every available CPU thread. On machines where that
+ * is slower (e.g. hyper-threaded CPUs), set OLLAMA_NUM_THREAD to override.
+ */
+const ollamaOptions = (extra = {}) => ({
+    ...(process.env.OLLAMA_NUM_THREAD
+        ? { num_thread: Number(process.env.OLLAMA_NUM_THREAD) }
+        : {}),
+    num_ctx: 8192,
+    ...extra
+});
+
 const PromptService = require("./prompt.service");
+const AppContextService = require("./appContext.service");
 
 const InvestigationService =
     require("../investigation.service");
 
 
 class AIService {
+
+    /*
+     * Loads the model into memory so the first real request is not slowed
+     * down by a long cold start. Uses the same options as real requests,
+     * otherwise Ollama would reload the model anyway.
+     */
+    static async warmUp() {
+
+        try {
+
+            await axios.post(
+                `${env.OLLAMA_URL}/api/generate`,
+                {
+                    model: env.OLLAMA_MODEL,
+                    prompt: "",
+                    stream: false,
+                    keep_alive: -1,
+                    options: ollamaOptions()
+                },
+                { timeout: 600000 }
+            );
+
+            console.log("AI model loaded and ready");
+
+        } catch (error) {
+
+            console.error("AI model warm-up failed:", error.message);
+
+        }
+
+    }
+
 
 
     /*
@@ -51,7 +96,9 @@ class AIService {
 
                 prompt,
 
-                stream: true
+                stream: true,
+
+                options: ollamaOptions()
 
             }
 
@@ -97,7 +144,10 @@ class AIService {
                      */
 
                     format:
-                        "json"
+                        "json",
+
+                    options:
+                        ollamaOptions()
 
                 }
 
@@ -225,7 +275,10 @@ class AIService {
 
                         prompt,
 
-                        stream: false
+                        stream: false,
+
+                    options:
+                            ollamaOptions()
 
                     }
 
@@ -282,39 +335,20 @@ class AIService {
 
     static async chat(
         alertId,
-        question
+        question,
+        messages = []
     ) {
 
-        let prompt;
+        const prompt =
+            await AppContextService.build({
 
+                question,
 
-        if (
-            alertId
-        ) {
+                alertId,
 
-            const investigation =
-                await InvestigationService.investigate(
-                    alertId
-                );
+                messages
 
-
-            prompt =
-                PromptService.chat(
-
-                    investigation,
-
-                    question
-
-                );
-
-        }
-
-        else {
-
-            prompt =
-                question;
-
-        }
+            });
 
 
         return axios({
@@ -333,7 +367,9 @@ class AIService {
 
                 prompt,
 
-                stream: true
+                stream: true,
+
+                options: ollamaOptions()
 
             }
 

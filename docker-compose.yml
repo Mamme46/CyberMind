@@ -1,4 +1,24 @@
+# Aucune configuration nécessaire : `docker compose up --build` suffit.
+# Les secrets (mot de passe PostgreSQL, clé JWT) sont générés automatiquement
+# au premier lancement par le service `secrets`, puis conservés dans un volume
+# Docker. Ils ne sont ni dans le code, ni dans git.
+
 services:
+
+  secrets:
+    image: alpine:3.20
+    container_name: cybermind-secrets
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        gen() { head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n'; }
+        [ -s /secrets/db_password ] || gen > /secrets/db_password
+        [ -s /secrets/jwt_secret ] || gen > /secrets/jwt_secret
+        chmod 644 /secrets/db_password /secrets/jwt_secret
+    volumes:
+      - secrets_data:/secrets
 
   postgres:
     image: postgres:18
@@ -7,13 +27,14 @@ services:
     environment:
       POSTGRES_DB: CyberMind
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Thile@123456
+      POSTGRES_PASSWORD_FILE: /secrets/db_password
 
-    ports:
-      - "5432:5432"
+    # Le port 5432 n'est volontairement pas publié : seule l'application
+    # (réseau interne Docker) peut joindre la base de données.
 
     volumes:
       - postgres_data:/var/lib/postgresql
+      - secrets_data:/secrets:ro
       - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
 
     healthcheck:
@@ -21,6 +42,39 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+    depends_on:
+      secrets:
+        condition: service_completed_successfully
+
+
+  # Serveur d'IA embarqué : l'application ne dépend pas d'un Ollama installé
+  # sur la machine de l'utilisateur.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cybermind-ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"          # garde le modèle en mémoire (pas de rechargement)
+      OLLAMA_FLASH_ATTENTION: "1"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Télécharge le modèle (llama3 par défaut, modifiable via OLLAMA_MODEL) au premier lancement (stocké dans le
+  # volume ollama_data, donc téléchargé une seule fois).
+  ollama-pull:
+    image: ollama/ollama:latest
+    container_name: cybermind-ollama-pull
+    entrypoint: ["ollama", "pull", "${OLLAMA_MODEL:-llama3}"]
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
 
 
   backend:
@@ -33,15 +87,33 @@ services:
     ports:
       - "3000:3000"
 
-    env_file:
-      - ./server/.env.docker
+    environment:
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: CyberMind
+      DB_USER: postgres
+      OLLAMA_URL: http://ollama:11434
+      OLLAMA_MODEL: qwen2.5:3b
+
+    # Charge les secrets générés puis démarre le serveur.
+    command:
+      - sh
+      - -c
+      - |
+        export DB_PASSWORD="$$(cat /secrets/db_password)"
+        export JWT_SECRET="$$(cat /secrets/jwt_secret)"
+        exec node server/src/server.js
 
     volumes:
-    - uploads_data:/app/uploads
+      - uploads_data:/app/uploads
+      - secrets_data:/secrets:ro
 
     depends_on:
       postgres:
         condition: service_healthy
+      ollama-pull:
+        condition: service_completed_successfully
 
   frontend:
     build:
@@ -60,3 +132,5 @@ services:
 volumes:
   postgres_data:
   uploads_data:
+  ollama_data:
+  secrets_data:
